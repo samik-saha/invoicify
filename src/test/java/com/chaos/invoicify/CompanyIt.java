@@ -44,4 +44,24 @@ public class CompanyIt {
                 .andExpect(jsonPath("$.status_code").value(200))
                 .andExpect(jsonPath("$.data.length()").value(0));
     }
+    @Test
+    public void getOneCompanyTest()throws Exception{
+        CompanyDto companyDto=new CompanyDto("Comapany1","Adress 123","Samik","Account Payable","467-790-0128");
+        mockMvc.perform(post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companyDto)))
+                .andExpect(jsonPath("$.status").value("Created"))
+                .andExpect(jsonPath("$.status_code").value(201))
+                .andExpect(jsonPath("$.data").value("Company created successfully!"));
+        mockMvc.perform(get("/company"))
+                .andExpect(jsonPath("$.status").value("Ok"))
+                .andExpect(jsonPath("$.status_code").value(200))
+                .andExpect(jsonPath("$.data.length()").value(1))
+                .andExpect(jsonPath("$.data[0].name").value("Comapany1"))
+                .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+                .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
+                .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
+                .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
+
+    }
 }

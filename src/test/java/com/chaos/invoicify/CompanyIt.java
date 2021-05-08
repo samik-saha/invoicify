@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,4 +65,24 @@ public class CompanyIt {
                 .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
 
     }
+    @Test
+    public void uniqueCompanyTest()throws Exception {
+        CompanyDto companyDto = new CompanyDto("Comapany1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+        CompanyDto companyDto2 = new CompanyDto("Comapany1", "Address 1234", "Samik1", "Account Payable", "467-790-0128");
+        mockMvc.perform(post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companyDto)))
+                .andExpect(jsonPath("$.status").value("Created"))
+                .andExpect(jsonPath("$.status_code").value(201))
+                .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+        mockMvc.perform(post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companyDto2)))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+                .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.data").value("Company already exist"));
+    }
+
+
 }

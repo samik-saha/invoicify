@@ -2,6 +2,7 @@ package com.chaos.invoicify.controller;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.Response;
+import com.chaos.invoicify.helper.StatusCodes;
 import com.chaos.invoicify.services.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,16 @@ public class CompanyController {
     }
 
     @PostMapping("/company")
-    @ResponseStatus(HttpStatus.CREATED)
     public Object addCompany(@RequestBody CompanyDto companyDto){
-        companyService.createCompany(companyDto);
-        return new Response(HttpStatus.CREATED.getReasonPhrase(),HttpStatus.CREATED.value(),
-                "Company created successfully!");
+
+        StatusCodes statusCodes=companyService.createCompany(companyDto);
+        if (statusCodes==StatusCodes.SUCCESS) {
+            return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+                    "Company created successfully!");
+        }else{
+            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Company already exist");
+        }
     }
 
     @GetMapping("/company")

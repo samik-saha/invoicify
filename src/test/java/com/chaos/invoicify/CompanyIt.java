@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -34,5 +35,13 @@ public class CompanyIt {
                 .andExpect(jsonPath("$.status_code").value(201))
                 .andExpect(jsonPath("$.data").value("Company created successfully!"));
 
+    }
+
+    @Test
+    public void getZeroCompanyTest()throws Exception{
+        mockMvc.perform(get("/company"))
+                .andExpect(jsonPath("$.status").value("Ok"))
+                .andExpect(jsonPath("$.status_code").value(200))
+                .andExpect(jsonPath("$.data.length()").value(0));
     }
 }

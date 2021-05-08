@@ -13,5 +13,5 @@ public class InvoiceDto {
     String invoiceName;
     String companyName;
     String invoiceDate;
-    List<String> itemsList;
+    String itemsList;
 }

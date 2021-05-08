@@ -1,10 +1,9 @@
-package com.chaos.invoicify.services;
+package com.chaos.invoicify.service;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.entity.CompanyEntity;
-import com.chaos.invoicify.helper.StatusCodes;
+import com.chaos.invoicify.helper.StatusCode;
 import com.chaos.invoicify.repository.CompanyRepository;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class CompanyService {
     public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
-    public StatusCodes createCompany(CompanyDto companyDto) {
+    public StatusCode createCompany(CompanyDto companyDto) {
         CompanyEntity companyEntity = companyRepository.findByName(companyDto.getName());
         if (companyEntity == null) {
             companyRepository.save(new CompanyEntity(companyDto.getName(),
@@ -25,10 +24,10 @@ public class CompanyService {
                     companyDto.getContactName(),
                     companyDto.getContactTitle(),
                     companyDto.getContactPhoneNumber()));
-            return StatusCodes.SUCCESS;
+            return StatusCode.SUCCESS;
 
         }else{
-            return StatusCodes.DUPLICATE;
+            return StatusCode.DUPLICATE;
         }
     }
 

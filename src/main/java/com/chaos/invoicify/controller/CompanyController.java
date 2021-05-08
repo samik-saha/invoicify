@@ -2,8 +2,8 @@ package com.chaos.invoicify.controller;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.Response;
-import com.chaos.invoicify.helper.StatusCodes;
-import com.chaos.invoicify.services.CompanyService;
+import com.chaos.invoicify.helper.StatusCode;
+import com.chaos.invoicify.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +20,8 @@ public class CompanyController {
     @PostMapping("/company")
     public Object addCompany(@RequestBody CompanyDto companyDto){
 
-        StatusCodes statusCodes=companyService.createCompany(companyDto);
-        if (statusCodes==StatusCodes.SUCCESS) {
+        StatusCode statusCode =companyService.createCompany(companyDto);
+        if (statusCode == StatusCode.SUCCESS) {
             return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
                     "Company created successfully!");
         }else{

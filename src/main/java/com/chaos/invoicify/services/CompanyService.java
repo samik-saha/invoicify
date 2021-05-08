@@ -6,6 +6,9 @@ import com.chaos.invoicify.repository.CompanyRepository;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CompanyService {
     private CompanyRepository companyRepository;
@@ -20,4 +23,15 @@ public class CompanyService {
                 companyDto.getContactTitle(),
                 companyDto.getContactPhoneNumber()));
     }
+
+    public List<CompanyDto> getCompanyList() {
+        return companyRepository.findAll().stream().map(companyEntity -> {
+            return new CompanyDto(companyEntity.getName(),
+                    companyEntity.getAddress(),
+                    companyEntity.getContactName(),
+                    companyEntity.getContactTitle(),
+                    companyEntity.getContactPhoneNumber());}).collect(Collectors.toList());
+        }
+
+
 }

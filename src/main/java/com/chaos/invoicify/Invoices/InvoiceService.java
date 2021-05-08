@@ -1,9 +1,13 @@
 package com.chaos.invoicify.Invoices;
 
+import com.chaos.invoicify.Item.ItemDto;
+import com.chaos.invoicify.Item.ItemEntity;
+import com.chaos.invoicify.Item.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -11,13 +15,14 @@ public class InvoiceService {
 
     @Autowired
     InvoicesRepository invoicesRepository;
+    @Autowired
+    ItemRepository itemRepository;
 
 
     public void addInvoices(InvoiceDto invoiceDto) {
         invoicesRepository.save(new InvoiceEntity(invoiceDto.getInvoiceName(),
             invoiceDto.getCompanyName(),
-            invoiceDto.getInvoiceDate(),
-            invoiceDto.getItemsList()));
+            invoiceDto.getInvoiceDate()));
     }
 
     public List<InvoiceDto> fetchAllInvoices() {
@@ -26,8 +31,26 @@ public class InvoiceService {
             .map(invoiceEntity -> {
                 return new InvoiceDto(invoiceEntity.getInvoiceName(),
                     invoiceEntity.getCompanyName(),
-                    invoiceEntity.getInvoiceDate(),
-                    invoiceEntity.getItemsList());
+                    invoiceEntity.getInvoiceDate());
             }).collect(Collectors.toList());
     }
+    public void addItem(ItemDto itemDto) {
+        Optional<InvoiceEntity> invoiceExists = invoicesRepository.findAll().stream()
+                .filter(invoiceEntity -> invoiceEntity.getInvoiceName().equals(itemDto.getInvoiceDto().getInvoiceName())).findAny();
+        if (invoiceExists.isEmpty()) {
+            invoicesRepository.save(new InvoiceEntity(itemDto.getInvoiceDto().getInvoiceName(),
+                    itemDto.getInvoiceDto().getCompanyName(),
+                    itemDto.getInvoiceDto().getInvoiceDate()
+                    ));
+        }
+
+        itemRepository.save(new ItemEntity(itemDto.getItemDescription(),
+                itemDto.getItemCount(),
+                itemDto.getItemFeeType(),
+                itemDto.getItemUnitPrice(),
+                new InvoiceEntity(itemDto.getInvoiceDto().getInvoiceName(),
+                        itemDto.getInvoiceDto().getCompanyName(),
+                        itemDto.getInvoiceDto().getInvoiceDate())));
+    }
+
 }

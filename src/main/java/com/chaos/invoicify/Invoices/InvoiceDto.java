@@ -1,10 +1,9 @@
 package com.chaos.invoicify.Invoices;
 
+import com.chaos.invoicify.Item.ItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +12,5 @@ public class InvoiceDto {
     String invoiceName;
     String companyName;
     String invoiceDate;
-    String itemsList;
+
 }

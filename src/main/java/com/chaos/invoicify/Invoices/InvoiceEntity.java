@@ -1,14 +1,13 @@
 package com.chaos.invoicify.Invoices;
 
+import com.chaos.invoicify.Item.ItemDto;
+import com.chaos.invoicify.Item.ItemEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -22,16 +21,16 @@ public class InvoiceEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-
+    @OneToMany(mappedBy = "invoice")
+    private List<ItemEntity> items;
     String invoiceName;
     String companyName;
     String invoiceDate;
-    String itemsList;
 
-    public InvoiceEntity(String invoiceName, String companyName, String invoiceDate, String itemsList) {
+    public InvoiceEntity(String invoiceName, String companyName, String invoiceDate) {
         this.invoiceName = invoiceName;
         this.companyName = companyName;
         this.invoiceDate = invoiceDate;
-        this.itemsList = itemsList;
+
     }
 }

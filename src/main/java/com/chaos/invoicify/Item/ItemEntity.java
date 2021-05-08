@@ -23,7 +23,7 @@ public class ItemEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id", nullable = true)
-    private InvoiceEntity invoiceEntity;
+    private InvoiceEntity invoice;
 
     String itemDescription;
     int itemCount;
@@ -35,6 +35,6 @@ public class ItemEntity {
         this.itemCount = itemCount;
         this.itemFeeType = itemFeeType;
         this.itemUnitPrice = itemUnitPrice;
-        this.invoiceEntity = invoiceEntity;
+        this.invoice = invoiceEntity;
     }
 }

@@ -53,4 +53,19 @@ public class InvoiceService {
                         itemDto.getInvoiceDto().getInvoiceDate())));
     }
 
+    public List<ItemDto> fetchAllItems(String invoiceName) {
+        return itemRepository.findAll()
+            .stream()
+            .filter(itemEntity -> itemEntity.getInvoice().getInvoiceName().equals(invoiceName))
+            .map(itemEntity -> {
+                return new ItemDto(itemEntity.getItemDescription(),
+                    itemEntity.getItemCount(),
+                    itemEntity.getItemFeeType(),
+                    itemEntity.getItemUnitPrice(),
+                    new InvoiceDto(itemEntity.getInvoice().getInvoiceName(),
+                        itemEntity.getInvoice().getCompanyName(),
+                        itemEntity.getInvoice().getInvoiceDate())
+                    );
+            }).collect(Collectors.toList());
+    }
 }

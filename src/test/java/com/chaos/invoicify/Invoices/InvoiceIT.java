@@ -38,9 +38,11 @@ public class InvoiceIT {
 
     @Test
     public void addInvoice() throws Exception {
-
+        System.out.println("first step");
 
         InvoiceDto invoiceDto = new InvoiceDto("Invoice1", "Company1", "2021-05-08");
+        System.out.println("first invoice:" + invoiceDto);
+
         ItemDto itemListDTo = new ItemDto("Description1", 10, FeeType.RATEBASED, 20.10,invoiceDto);
         mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -54,12 +56,10 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].invoiceName").value("Invoice1"))
                 .andExpect(jsonPath("[0].companyName").value("Company1"))
                 .andExpect(jsonPath("[0].invoiceDate").value("2021-05-08"))
-                .andExpect(jsonPath("[0].itemList.itemDescription").value("Description1"))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceName").description("Invoice1")
                         , fieldWithPath("[0].companyName").description("Company1")
                         , fieldWithPath("[0].invoiceDate").description("2021-05-08")
-                        , fieldWithPath("[0].itemList.itemDescription").description("Description1")
                 )));
     }
 
@@ -67,11 +67,22 @@ public class InvoiceIT {
     public void addItem() throws Exception {
         InvoiceDto invoiceDto = new InvoiceDto("Invoice1", "Company1", "2021-05-08");
         ItemDto itemListDTo = new ItemDto("Description1", 10, FeeType.RATEBASED, 20.10, invoiceDto);
+
+        System.out.println("Item Dto is : " + itemListDTo);
+
         mockMvc.perform(post("/invoices/Invoice1/item")
                 .content(objectMapper.writeValueAsString(itemListDTo))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(document("AddItem"));
+
+
+        mockMvc.perform(get("/invoices/Invoice1/item"))
+            .andExpect(jsonPath("[0].itemDescription").value("Description1"))
+            .andExpect(jsonPath("[0].itemCount").value(10))
+            .andExpect(jsonPath("[0].itemFeeType").value(FeeType.RATEBASED.name()))
+            .andExpect(jsonPath("[0].itemUnitPrice").value(20.10));
+//            .andExpect(jsonPath("[0].invoiceDto").value("invoiceName=Invoice1, companyName=Company1, invoiceDate=2021-05-08"));
 
     }
 }

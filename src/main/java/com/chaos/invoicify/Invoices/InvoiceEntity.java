@@ -22,7 +22,8 @@ public class InvoiceEntity {
     Long id;
 
     @OneToMany(mappedBy = "invoice")
-    private List<ItemEntity> items;
+    List<ItemEntity> items;
+
     String invoiceName;
     String companyName;
     String invoiceDate;

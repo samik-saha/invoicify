@@ -29,6 +29,12 @@ public class InvoiceService {
         return invoicesRepository.findAll()
             .stream()
             .map(invoiceEntity -> {
+
+                InvoiceDto invoiceDto = new InvoiceDto(invoiceEntity.getInvoiceName(),
+                    invoiceEntity.getCompanyName(),
+                    invoiceEntity.getInvoiceDate());
+                System.out.println(invoiceDto);
+
                 return new InvoiceDto(invoiceEntity.getInvoiceName(),
                     invoiceEntity.getCompanyName(),
                     invoiceEntity.getInvoiceDate());

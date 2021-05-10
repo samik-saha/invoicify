@@ -17,6 +17,9 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
     public StatusCode createCompany(CompanyDto companyDto) {
+        if (companyDto.getName() == null || companyDto.getName().isEmpty()){
+            return StatusCode.NONAME;
+        }
         CompanyEntity companyEntity = companyRepository.findByName(companyDto.getName());
         if (companyEntity == null) {
             companyRepository.save(new CompanyEntity(companyDto.getName(),

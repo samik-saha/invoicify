@@ -21,13 +21,37 @@ public class CompanyController {
     public Object addCompany(@RequestBody CompanyDto companyDto){
 
         StatusCode statusCode =companyService.createCompany(companyDto);
-        if (statusCode == StatusCode.SUCCESS) {
-            return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
-                    "Company created successfully!");
-        }else{
-            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                    "Company already exist");
+        Response response = null;
+        switch (statusCode){
+            case SUCCESS:
+                response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+                        "Company created successfully!");
+                break;
+            case DUPLICATE:
+                response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                        "Company already exist");
+                break;
+            case NONAME:
+                response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                        "Company name cannot be empty!");
+                break;
         }
+
+        return response;
+
+//        if (statusCode == StatusCode.SUCCESS) {
+//            return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+//                    "Company created successfully!");
+//        }else if (statusCode == StatusCode.DUPLICATE){
+//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+//                    "Company already exist");
+//        }else if (statusCode == StatusCode.NONAME){
+//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+//                    "Company name cannot be null!");
+//        }else{
+//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+//                    "Error occurred while creating company!");
+//        }
     }
 
     @GetMapping("/company")

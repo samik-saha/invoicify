@@ -1,7 +1,9 @@
 package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
+import com.chaos.invoicify.entity.CompanyEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -27,10 +29,18 @@ public class CompanyIt {
 
   @Autowired private ObjectMapper objectMapper;
 
+  private CompanyDto companyDto, companyDto2;
+
+  @BeforeEach
+  public void setup() {
+    companyDto =
+            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+    companyDto2 =
+            new CompanyDto("Company2", "Address 456", "Rajendra", "Account Payable", "123-456-7890");
+  }
+
   @Test
   public void createCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     mockMvc
         .perform(
             post("/company")
@@ -72,9 +82,6 @@ public class CompanyIt {
 
   @Test
   public void getOneCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-
     mockMvc
         .perform(
             post("/company")
@@ -89,7 +96,7 @@ public class CompanyIt {
         .andExpect(jsonPath("$.status").value("OK"))
         .andExpect(jsonPath("$.status_code").value(200))
         .andExpect(jsonPath("$.data.length()").value(1))
-        .andExpect(jsonPath("$.data[0].name").value("Comapany1"))
+        .andExpect(jsonPath("$.data[0].name").value("Company1"))
         .andExpect(jsonPath("$.data[0].address").value("Address 123"))
         .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
         .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
@@ -111,16 +118,11 @@ public class CompanyIt {
 
   @Test
   public void getManyCompaniesTest() throws Exception {
-    CompanyDto companyDto1 =
-            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-    CompanyDto companyDto2 =
-            new CompanyDto("Company2", "Address 456", "Rajendra", "Account Payable", "123-456-7890");
-
     mockMvc
             .perform(
                     post("/company")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(companyDto1)));
+                            .content(objectMapper.writeValueAsString(companyDto)));
     mockMvc
             .perform(
                     post("/company")
@@ -159,11 +161,6 @@ public class CompanyIt {
 
   @Test
   public void uniqueCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-    CompanyDto companyDto2 =
-        new CompanyDto("Comapany1", "Address 1234", "Samik1", "Account Payable", "467-790-0128");
-
     mockMvc
         .perform(
             post("/company")
@@ -177,9 +174,34 @@ public class CompanyIt {
         .perform(
             post("/company")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(companyDto2)))
+                .content(objectMapper.writeValueAsString(companyDto)))
         .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
         .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.data").value("Company already exist"));
+  }
+
+  @Test
+  public void addCompanyWithBlankNameTest () throws Exception{
+    CompanyDto companyDtoNullName =
+            new CompanyDto(null, "Address 123", "Samik", "Account Payable", "467-790-0128");
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDtoNullName)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
+
+    CompanyDto companyDtoBlankName =
+            new CompanyDto("", "Address 123", "Samik", "Account Payable", "467-790-0128");
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDtoBlankName)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
   }
 }

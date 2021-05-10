@@ -57,4 +57,5 @@ public class CompanyServiceTest {
     StatusCode s = companyService.createCompany(companyDto2);
     assertThat(s).isEqualTo(StatusCode.DUPLICATE);
   }
+
 }

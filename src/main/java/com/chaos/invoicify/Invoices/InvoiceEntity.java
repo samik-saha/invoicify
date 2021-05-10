@@ -2,6 +2,7 @@ package com.chaos.invoicify.Invoices;
 
 import com.chaos.invoicify.Item.ItemDto;
 import com.chaos.invoicify.Item.ItemEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class InvoiceEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @OneToMany(mappedBy = "invoice")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "invoice")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     List<ItemEntity> items;
 
     String invoiceName;
@@ -32,6 +34,5 @@ public class InvoiceEntity {
         this.invoiceName = invoiceName;
         this.companyName = companyName;
         this.invoiceDate = invoiceDate;
-
     }
 }

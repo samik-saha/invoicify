@@ -15,7 +15,6 @@ public class InvoiceDto {
     String invoiceName;
     String companyName;
     String invoiceDate;
-
     List<ItemDto> items;
 
     public InvoiceDto(String invoiceName, String companyName, String invoiceDate) {
@@ -24,4 +23,5 @@ public class InvoiceDto {
         this.invoiceDate = invoiceDate;
         this.items = new ArrayList<>();
     }
+
 }

@@ -67,6 +67,33 @@ public class InvoiceIT {
     }
 //      ADD INVOICE
 //          addInvoiceWithOneItem
+    @Test
+    public void addInvoiceWithOneItem() throws Exception{
+        ItemDto itemListDTo = new ItemDto("Description1", 10, FeeType.RATEBASED, 20.10);
+        InvoiceDto invoiceDto = new InvoiceDto("Invoice1", "Company1", "2021-05-08", List.of(itemListDTo));
+
+        mockMvc.perform(post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andDo(document("AddInvoices"));
+        mockMvc.perform(get("/invoices"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(1))
+                .andExpect(jsonPath("[0].invoiceName").value("Invoice1"))
+                .andExpect(jsonPath("[0].companyName").value("Company1"))
+                .andExpect(jsonPath("[0].invoiceDate").value("2021-05-08"))
+                .andExpect(jsonPath("[0].items").value("Description1"))
+                .andDo(document("GetInvoices", responseFields(
+                        fieldWithPath("[0].invoiceName").description("Invoice1")
+                        , fieldWithPath("[0].companyName").description("Company1")
+                        , fieldWithPath("[0].invoiceDate").description("2021-05-08")
+                        , fieldWithPath("[0].items.itemDescription").description("[]")
+                )));
+
+
+
+    }
 //          addInvoiceWithMultipleItems
 //          addInvoiceWithNonUniqueValue
 //      GET INVOICE
@@ -80,18 +107,17 @@ public class InvoiceIT {
 //          Track Update Date (Should this be a list)
     @Test
     public void addItem() throws Exception {
+        System.out.println(("first step"));
         InvoiceDto invoiceDto = new InvoiceDto("Invoice1", "Company1", "2021-05-08");
+        System.out.println(("second step" +invoiceDto.invoiceName));
         ItemDto itemListDTo = new ItemDto("Description1", 10, FeeType.RATEBASED, 20.10, invoiceDto);
 
         System.out.println("Item Dto is : " + itemListDTo);
-
         mockMvc.perform(post("/invoices/Invoice1/item")
                 .content(objectMapper.writeValueAsString(itemListDTo))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andDo(document("AddItem"));
-
-
         mockMvc.perform(get("/invoices/Invoice1/item"))
             .andExpect(jsonPath("[0].itemDescription").value("Description1"))
             .andExpect(jsonPath("[0].itemCount").value(10))
@@ -99,4 +125,6 @@ public class InvoiceIT {
             .andExpect(jsonPath("[0].itemUnitPrice").value(20.10));
 
     }
+
+
 }

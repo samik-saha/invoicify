@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +19,13 @@ public class ItemDto {
     Double itemUnitPrice;
     InvoiceDto invoiceDto;
 
+    public ItemDto(String itemDescription, int itemCount, FeeType itemFeeType, Double itemUnitPrice) {
+        this.itemDescription = itemDescription;
+        this.itemCount = itemCount;
+        this.itemFeeType = itemFeeType;
+        this.itemUnitPrice = itemUnitPrice;
+    }
+
     @Override
     public String toString() {
         return "ItemDto{" +
@@ -27,5 +36,6 @@ public class ItemDto {
                 ", invoiceDto=" + invoiceDto +
                 '}';
     }
+
 }
 

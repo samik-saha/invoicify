@@ -2,6 +2,7 @@ package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.entity.CompanyEntity;
+import com.chaos.invoicify.helper.StatusCode;
 import com.chaos.invoicify.repository.CompanyRepository;
 import com.chaos.invoicify.service.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,5 +49,12 @@ public class CompanyServiceTest {
     when(companyRepository.findAll()).thenReturn(List.of(companyEntity));
     List<CompanyDto> companyDtoList = companyService.getCompanyList();
     assertThat(companyDtoList).isEqualTo(List.of(companyDto));
+  }
+
+  @Test
+  public void uniqueCompanyTest(){
+    when(companyRepository.findByName("Comapany1")).thenReturn(companyEntity);
+    StatusCode s = companyService.createCompany(companyDto2);
+    assertThat(s).isEqualTo(StatusCode.DUPLICATE);
   }
 }

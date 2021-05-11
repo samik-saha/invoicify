@@ -268,7 +268,11 @@ public class CompanyIt {
 
     mockMvc
             .perform(get("/company"))
-            .andExpect(jsonPath("$.data[0].name").value("Apple"));
+            .andExpect(jsonPath("$.data[0].name").value("Apple"))
+            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
+            .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
+            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
 
   }
 

@@ -55,7 +55,7 @@ public class CompanyController {
         StatusCode statusCode;
 
         if (companyName == null) {
-            statusCode = companyService.updateCompany(companyDto);
+            statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
         }
         else{
             statusCode = companyService.updateCompany(companyName, companyDto);

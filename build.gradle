@@ -65,6 +65,12 @@ jacocoTestReport {
 		dependsOn test // tests are required to run before generating the report
 		html.destination layout.buildDirectory.dir('reports/jacocoHtml').get().asFile
 	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: 'com/chaos/invoicify/DatabaseConfig**')
+		}))
+	}
 }
 
 jacocoTestCoverageVerification {

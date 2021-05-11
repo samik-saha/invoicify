@@ -50,7 +50,7 @@ public class CompanyController {
 
     @PutMapping("/company")
     @ResponseStatus(HttpStatus.OK)
-    public Object updateCompany(@RequestParam String companyName, @RequestBody CompanyDto companyDto){
+    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
         Response response = null;
         StatusCode statusCode;
 

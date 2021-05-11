@@ -35,4 +35,15 @@ public class InvoiceEntity {
         this.companyName = companyName;
         this.invoiceDate = invoiceDate;
     }
+
+    @Override
+    public String toString() {
+        return "InvoiceEntity{" +
+            "id=" + id +
+            ", items=" + items +
+            ", invoiceName='" + invoiceName + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", invoiceDate='" + invoiceDate + '\'' +
+            '}';
+    }
 }

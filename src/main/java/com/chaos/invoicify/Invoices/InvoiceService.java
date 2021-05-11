@@ -32,13 +32,15 @@ public class InvoiceService {
                     invoiceDto.getItems().get(0).getItemFeeType(),
                     invoiceDto.getItems().get(0).getItemUnitPrice());
 
+            System.out.println("in the addInvoices: " + itemDto);
+
             itemRepository.save(new ItemEntity(itemDto.getItemDescription(),
                     itemDto.getItemCount(),
                     itemDto.getItemFeeType(),
                     itemDto.getItemUnitPrice(),
-                    new InvoiceEntity(itemDto.getInvoiceDto().getInvoiceName(),
-                            itemDto.getInvoiceDto().getCompanyName(),
-                            itemDto.getInvoiceDto().getInvoiceDate())));
+                    new InvoiceEntity(invoiceDto.getInvoiceName(),
+                        invoiceDto.getCompanyName(),
+                        invoiceDto.getInvoiceDate())));
         }
     }
 
@@ -46,10 +48,12 @@ public class InvoiceService {
         return invoicesRepository.findAll()
                 .stream()
                 .map(invoiceEntity -> {
+                    System.out.println("Invoice Entity inside fetchAllInvoices: " + invoiceEntity);
                     return new InvoiceDto(invoiceEntity.getInvoiceName(),
                             invoiceEntity.getCompanyName(),
                             invoiceEntity.getInvoiceDate(),
                             (invoiceEntity.getItems().stream().map(itemEntity -> {
+                                System.out.println("Items Entity inside fetchAllInvoices" + itemEntity);
                                 return new ItemDto(itemEntity.getItemDescription(),
                                         itemEntity.getItemCount(),
                                         itemEntity.getItemFeeType(),

@@ -52,13 +52,17 @@ public class CompanyController {
     @ResponseStatus(HttpStatus.OK)
     public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
         Response response = null;
-        StatusCode statusCode;
+        StatusCode statusCode=null;
 
-        if (companyName == null) {
+
+        if (companyName == null&& companyDto.getName()!=null) {
             statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
         }
-        else{
+        else if(companyName!=null){
             statusCode = companyService.updateCompany(companyName, companyDto);
+        }else{
+             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Company name is mandatory for updating company details!");
         }
 
         if (statusCode == StatusCode.SUCCESS){

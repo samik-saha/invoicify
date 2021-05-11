@@ -39,19 +39,6 @@ public class CompanyController {
 
         return response;
 
-//        if (statusCode == StatusCode.SUCCESS) {
-//            return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
-//                    "Company created successfully!");
-//        }else if (statusCode == StatusCode.DUPLICATE){
-//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-//                    "Company already exist");
-//        }else if (statusCode == StatusCode.NONAME){
-//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-//                    "Company name cannot be null!");
-//        }else{
-//            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-//                    "Error occurred while creating company!");
-//        }
     }
 
     @GetMapping("/company")
@@ -60,4 +47,25 @@ public class CompanyController {
         List<CompanyDto> companyDtoList=companyService.getCompanyList();
         return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyDtoList);
     }
+
+    @PutMapping("/company")
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateCompany(@RequestParam String companyName, @RequestBody CompanyDto companyDto){
+        Response response = null;
+        StatusCode statusCode;
+
+        if (companyName == null) {
+            statusCode = companyService.updateCompany(companyDto);
+        }
+        else{
+            statusCode = companyService.updateCompany(companyName, companyDto);
+        }
+
+        if (statusCode == StatusCode.SUCCESS){
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                    "Company updated successfully!");
+        }
+        return response;
+    }
+
 }

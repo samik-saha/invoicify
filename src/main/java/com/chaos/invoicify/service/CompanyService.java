@@ -16,6 +16,7 @@ public class CompanyService {
     public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
+
     public StatusCode createCompany(CompanyDto companyDto) {
         if (companyDto.getName() == null || companyDto.getName().isEmpty()){
             return StatusCode.NONAME;
@@ -44,4 +45,37 @@ public class CompanyService {
         }
 
 
+    public StatusCode updateCompany(CompanyDto companyDto) {
+        CompanyEntity companyEntity = companyRepository.findByName(companyDto.getName());
+        StatusCode statusCode = StatusCode.OTHER;
+
+        if (companyEntity != null) {
+            companyEntity.setAddress(companyDto.getAddress());
+            companyEntity.setContactName(companyDto.getContactName());
+            companyEntity.setContactTitle(companyDto.getContactTitle());
+            companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
+            companyRepository.save(companyEntity);
+            statusCode = StatusCode.SUCCESS;
+        }
+
+        return statusCode;
+
+    }
+
+    public StatusCode updateCompany(String companyName, CompanyDto companyDto) {
+        CompanyEntity companyEntity = companyRepository.findByName(companyName);
+        StatusCode statusCode = StatusCode.OTHER;
+
+        if (companyEntity != null) {
+            companyEntity.setName(companyDto.getName());
+            companyEntity.setAddress(companyDto.getAddress());
+            companyEntity.setContactName(companyDto.getContactName());
+            companyEntity.setContactTitle(companyDto.getContactTitle());
+            companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
+            companyRepository.save(companyEntity);
+            statusCode = StatusCode.SUCCESS;
+        }
+
+        return statusCode;
+    }
 }

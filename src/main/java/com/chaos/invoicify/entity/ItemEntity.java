@@ -1,7 +1,6 @@
-package com.chaos.invoicify.Item;
+package com.chaos.invoicify.entity;
 
-import com.chaos.invoicify.Invoices.FeeType;
-import com.chaos.invoicify.Invoices.InvoiceEntity;
+import com.chaos.invoicify.helper.FeeType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

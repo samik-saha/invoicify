@@ -1,6 +1,8 @@
 package com.chaos.invoicify.Invoices;
 
-import com.chaos.invoicify.Item.ItemDto;
+import com.chaos.invoicify.dto.ItemDto;
+import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.helper.FeeType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

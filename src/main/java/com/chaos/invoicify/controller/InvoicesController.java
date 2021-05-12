@@ -1,6 +1,8 @@
-package com.chaos.invoicify.Invoices;
+package com.chaos.invoicify.controller;
 
-import com.chaos.invoicify.Item.ItemDto;
+import com.chaos.invoicify.dto.ItemDto;
+import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

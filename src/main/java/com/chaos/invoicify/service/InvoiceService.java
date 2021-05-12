@@ -1,14 +1,15 @@
-package com.chaos.invoicify.Invoices;
+package com.chaos.invoicify.service;
 
-import com.chaos.invoicify.Item.ItemDto;
-import com.chaos.invoicify.Item.ItemEntity;
-import com.chaos.invoicify.Item.ItemRepository;
+import com.chaos.invoicify.dto.ItemDto;
+import com.chaos.invoicify.entity.ItemEntity;
+import com.chaos.invoicify.repository.InvoicesRepository;
+import com.chaos.invoicify.repository.ItemRepository;
+import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.entity.InvoiceEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

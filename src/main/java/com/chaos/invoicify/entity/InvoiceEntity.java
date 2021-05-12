@@ -1,7 +1,5 @@
-package com.chaos.invoicify.Invoices;
+package com.chaos.invoicify.entity;
 
-import com.chaos.invoicify.Item.ItemDto;
-import com.chaos.invoicify.Item.ItemEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.chaos.invoicify.Item;
+package com.chaos.invoicify.dto;
 
-import com.chaos.invoicify.Invoices.FeeType;
+import com.chaos.invoicify.helper.FeeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

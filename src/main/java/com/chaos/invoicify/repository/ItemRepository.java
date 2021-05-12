@@ -1,6 +1,6 @@
-package com.chaos.invoicify.Item;
+package com.chaos.invoicify.repository;
 
-import com.chaos.invoicify.Invoices.InvoiceEntity;
+import com.chaos.invoicify.entity.ItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

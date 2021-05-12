@@ -1,4 +1,4 @@
-package com.chaos.invoicify.Invoices;
+package com.chaos.invoicify.helper;
 
 import lombok.NoArgsConstructor;
 

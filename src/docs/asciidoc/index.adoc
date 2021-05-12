@@ -1,0 +1,36 @@
+= Invoicify API
+Welcome to the Invoicify Application by Chaos!
+
+=== Invoices
+
+GetInvoices
+
+.request
+include::{snippets}/GetInvoices/http-request.adoc[]
+
+.response
+include::{snippets}/GetInvoices/http-response.adoc[]
+
+AddInvoices
+
+.request
+include::{snippets}/AddInvoices/http-request.adoc[]
+
+.response
+include::{snippets}/AddInvoices/http-response.adoc[]
+
+AddItem
+
+.request
+include::{snippets}/AddItem/http-request.adoc[]
+
+.response
+include::{snippets}/AddItem/http-response.adoc[]
+
+AddItems
+
+.request
+include::{snippets}/AddItems/http-request.adoc[]
+
+.response
+include::{snippets}/AddItems/http-response.adoc[]

@@ -1,7 +1,9 @@
 package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
+import com.chaos.invoicify.entity.CompanyEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -12,10 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -27,10 +33,18 @@ public class CompanyIt {
 
   @Autowired private ObjectMapper objectMapper;
 
+  private CompanyDto companyDto, companyDto2;
+
+  @BeforeEach
+  public void setup() {
+    companyDto =
+            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+    companyDto2 =
+            new CompanyDto("Company2", "Address 456", "Rajendra", "Account Payable", "123-456-7890");
+  }
+
   @Test
   public void createCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     mockMvc
         .perform(
             post("/company")
@@ -72,9 +86,6 @@ public class CompanyIt {
 
   @Test
   public void getOneCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-
     mockMvc
         .perform(
             post("/company")
@@ -89,7 +100,7 @@ public class CompanyIt {
         .andExpect(jsonPath("$.status").value("OK"))
         .andExpect(jsonPath("$.status_code").value(200))
         .andExpect(jsonPath("$.data.length()").value(1))
-        .andExpect(jsonPath("$.data[0].name").value("Comapany1"))
+        .andExpect(jsonPath("$.data[0].name").value("Company1"))
         .andExpect(jsonPath("$.data[0].address").value("Address 123"))
         .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
         .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
@@ -111,16 +122,11 @@ public class CompanyIt {
 
   @Test
   public void getManyCompaniesTest() throws Exception {
-    CompanyDto companyDto1 =
-            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-    CompanyDto companyDto2 =
-            new CompanyDto("Company2", "Address 456", "Rajendra", "Account Payable", "123-456-7890");
-
     mockMvc
             .perform(
                     post("/company")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(companyDto1)));
+                            .content(objectMapper.writeValueAsString(companyDto)));
     mockMvc
             .perform(
                     post("/company")
@@ -159,11 +165,6 @@ public class CompanyIt {
 
   @Test
   public void uniqueCompanyTest() throws Exception {
-    CompanyDto companyDto =
-        new CompanyDto("Comapany1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-    CompanyDto companyDto2 =
-        new CompanyDto("Comapany1", "Address 1234", "Samik1", "Account Payable", "467-790-0128");
-
     mockMvc
         .perform(
             post("/company")
@@ -177,9 +178,166 @@ public class CompanyIt {
         .perform(
             post("/company")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(companyDto2)))
+                .content(objectMapper.writeValueAsString(companyDto)))
         .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
         .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
         .andExpect(jsonPath("$.data").value("Company already exist"));
   }
+
+  @Test
+  public void addCompanyWithBlankNameTest () throws Exception{
+    CompanyDto companyDtoNullName =
+            new CompanyDto(null, "Address 123", "Samik", "Account Payable", "467-790-0128");
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDtoNullName)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
+
+    CompanyDto companyDtoBlankName =
+            new CompanyDto("", "Address 123", "Samik", "Account Payable", "467-790-0128");
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDtoBlankName)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
+  }
+
+  @Test
+  public void updateCompanyTest() throws Exception{
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDto)))
+            .andExpect(jsonPath("$.status").value("Created"))
+            .andExpect(jsonPath("$.status_code").value(201))
+            .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+    CompanyDto updatedCompanyDto = new CompanyDto();
+    updatedCompanyDto.setName("Company1");
+    updatedCompanyDto.setAddress("New Address 123");
+    updatedCompanyDto.setContactName("ABCD");
+    updatedCompanyDto.setContactTitle("XYZ");
+    updatedCompanyDto.setContactPhoneNumber("999-999-9999");
+
+    mockMvc
+            .perform(
+                    put("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+            .andExpect(jsonPath("$.data").value("Company updated successfully!"))
+            .andDo(
+                    document(
+                            "Update-Company-ExceptName",
+                            requestFields(
+                                    fieldWithPath("name").description("Company name"),
+                                    fieldWithPath("address").description("Company address"),
+                                    fieldWithPath("contactName").description("Contact name"),
+                                    fieldWithPath("contactTitle").description("Contact title"),
+                                    fieldWithPath("contactPhoneNumber").description("Contact phone number")),
+                            responseFields(
+                                    fieldWithPath("status").description("Return the http status description"),
+                                    fieldWithPath("status_code").description("Return the http status code"),
+                                    fieldWithPath("data").description("Return company update status"))));
+    ;
+
+    mockMvc
+            .perform(get("/company"))
+            .andExpect(jsonPath("$.data[0].address").value("New Address 123"))
+            .andExpect(jsonPath("$.data[0].contactName").value("ABCD"))
+            .andExpect(jsonPath("$.data[0].contactTitle").value("XYZ"))
+            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("999-999-9999"));
+
+  }
+
+  @Test
+  public void updateCompanyNameTest() throws Exception{
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDto)))
+            .andExpect(jsonPath("$.status").value("Created"))
+            .andExpect(jsonPath("$.status_code").value(201))
+            .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+    CompanyDto updatedCompanyDto = new CompanyDto();
+    updatedCompanyDto.setName("Apple");
+
+    mockMvc
+            .perform(
+                    put("/company").param("companyName","Company1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+            .andExpect(jsonPath("$.data").value("Company updated successfully!"))
+            .andDo(
+                    document(
+                            "Update-Company",
+                            requestParameters( parameterWithName("companyName").description("Company name to be updated")),
+                            requestFields(
+                                    fieldWithPath("name").description("Company name"),
+                                    fieldWithPath("address").description("Company address"),
+                                    fieldWithPath("contactName").description("Contact name"),
+                                    fieldWithPath("contactTitle").description("Contact title"),
+                                    fieldWithPath("contactPhoneNumber").description("Contact phone number")),
+                            responseFields(
+                                    fieldWithPath("status").description("Return the http status description"),
+                                    fieldWithPath("status_code").description("Return the http status code"),
+                                    fieldWithPath("data").description("Return company update status"))));
+
+
+    mockMvc
+            .perform(get("/company"))
+            .andExpect(jsonPath("$.data[0].name").value("Apple"))
+            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
+            .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
+            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
+
+  }
+
+  @Test
+  public void updateCompanyWithoutNameTest() throws Exception{
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDto)))
+            .andExpect(jsonPath("$.status").value("Created"))
+            .andExpect(jsonPath("$.status_code").value(201))
+            .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+    CompanyDto updatedCompanyDto = new CompanyDto();
+    updatedCompanyDto.setContactName("Raj");
+
+    mockMvc
+            .perform(
+                    put("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.data").value("Company name is mandatory for updating company details!"));
+
+    mockMvc
+            .perform(get("/company"))
+            .andExpect(jsonPath("$.data[0].name").value("Company1"))
+            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
+            .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
+            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
+
+  }
+
 }

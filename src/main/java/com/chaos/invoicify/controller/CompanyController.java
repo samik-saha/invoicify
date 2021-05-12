@@ -21,13 +21,24 @@ public class CompanyController {
     public Object addCompany(@RequestBody CompanyDto companyDto){
 
         StatusCode statusCode =companyService.createCompany(companyDto);
-        if (statusCode == StatusCode.SUCCESS) {
-            return new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
-                    "Company created successfully!");
-        }else{
-            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                    "Company already exist");
+        Response response = null;
+        switch (statusCode){
+            case SUCCESS:
+                response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+                        "Company created successfully!");
+                break;
+            case DUPLICATE:
+                response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                        "Company already exist");
+                break;
+            case NONAME:
+                response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                        "Company name cannot be empty!");
+                break;
         }
+
+        return response;
+
     }
 
     @GetMapping("/company")
@@ -36,4 +47,29 @@ public class CompanyController {
         List<CompanyDto> companyDtoList=companyService.getCompanyList();
         return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyDtoList);
     }
+
+    @PutMapping("/company")
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
+        Response response = null;
+        StatusCode statusCode=null;
+
+
+        if (companyName == null&& companyDto.getName()!=null) {
+            statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
+        }
+        else if(companyName!=null){
+            statusCode = companyService.updateCompany(companyName, companyDto);
+        }else{
+             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Company name is mandatory for updating company details!");
+        }
+
+        if (statusCode == StatusCode.SUCCESS){
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                    "Company updated successfully!");
+        }
+        return response;
+    }
+
 }

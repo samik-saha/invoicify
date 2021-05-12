@@ -18,3 +18,19 @@ include::{snippets}/AddInvoices/http-request.adoc[]
 
 .response
 include::{snippets}/AddInvoices/http-response.adoc[]
+
+AddItem
+
+.request
+include::{snippets}/AddItem/http-request.adoc[]
+
+.response
+include::{snippets}/AddItem/http-response.adoc[]
+
+AddItems
+
+.request
+include::{snippets}/AddItems/http-request.adoc[]
+
+.response
+include::{snippets}/AddItems/http-response.adoc[]

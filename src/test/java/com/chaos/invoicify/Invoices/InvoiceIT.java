@@ -76,16 +76,17 @@ public class InvoiceIT {
             .andDo(document("AddInvoices"));
 
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10);
+        List<ItemDto> itemDtoList = Arrays.asList(itemDTo);
 
-        mockMvc.perform(post("/invoices/Invoice1/item")
-            .content(objectMapper.writeValueAsString(itemDTo))
+        mockMvc.perform(post("/invoices/Invoice1/items")
+            .content(objectMapper.writeValueAsString(itemDtoList))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.itemDescription").value("Item1"))
-            .andExpect(jsonPath("$.itemCount").value(10))
-            .andExpect(jsonPath("$.itemFeeType").value(FeeType.RATEBASED.name()))
-            .andExpect(jsonPath("$.itemUnitPrice").value(20.10))
-            .andDo(document("AddItem"));
+            .andExpect(jsonPath("[0].itemDescription").value("Item1"))
+            .andExpect(jsonPath("[0].itemCount").value(10))
+            .andExpect(jsonPath("[0].itemFeeType").value(FeeType.RATEBASED.name()))
+            .andExpect(jsonPath("[0].itemUnitPrice").value(20.10))
+            .andDo(document("AddItems"));
 
         mockMvc.perform(get("/invoices"))
             .andExpect(status().isOk())
@@ -136,7 +137,7 @@ public class InvoiceIT {
             .andExpect(jsonPath("[0].itemFeeType").value(FeeType.RATEBASED.name()))
             .andExpect(jsonPath("[0].itemUnitPrice").value(20.10))
             .andExpect(jsonPath("[1].itemDescription").value("Item2"))
-            .andDo(document("AddItem"));
+            .andDo(document("AddItems"));
 
         mockMvc.perform(get("/invoices"))
             .andExpect(status().isOk())

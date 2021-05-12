@@ -56,23 +56,6 @@ public class InvoiceService {
         return invoiceEntity;
     }
 
-    public ItemDto addItem(String invoiceName, ItemDto itemDto) {
-        InvoiceEntity invoiceEntity = this.invoicesRepository.findByInvoiceName(invoiceName);
-        if (invoiceEntity != null) {
-            System.out.println("Invoice inside add Item: " + invoiceEntity.getInvoiceName() + " " + invoiceEntity.getCompanyName());
-        } else {
-            System.out.println("returned a null");
-        }
-        ItemEntity itemEntity = new ItemEntity(itemDto.getItemDescription(),
-            itemDto.getItemCount(),
-            itemDto.getItemFeeType(),
-            itemDto.getItemUnitPrice(),
-            invoiceEntity);
-
-        this.itemRepository.save(itemEntity);
-        return itemDto;
-    }
-
     public List<ItemDto> fetchAllItems(InvoiceEntity invoiceEntity) {
         return itemRepository.findAll()
                 .stream()

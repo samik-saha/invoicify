@@ -25,12 +25,6 @@ public class InvoicesController {
     @GetMapping
     public List<InvoiceDto> getAllInvoices() {return invoiceService.fetchAllInvoices();}
 
-    @PostMapping("{invoiceName}/item")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addItem(@PathVariable String invoiceName, @RequestBody ItemDto itemDto) {
-        return this.invoiceService.addItem(invoiceName,itemDto);
-    }
-
     @PostMapping("{invoiceName}/items")
     @ResponseStatus(HttpStatus.CREATED)
     public List<ItemDto> addItems(@PathVariable String invoiceName, @RequestBody List<ItemDto> itemDtoList) {

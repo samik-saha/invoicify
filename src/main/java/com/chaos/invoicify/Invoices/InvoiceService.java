@@ -6,6 +6,7 @@ import com.chaos.invoicify.Item.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,84 +20,92 @@ public class InvoiceService {
     ItemRepository itemRepository;
 
 
-    public void addInvoices(InvoiceDto invoiceDto) {
-
-
+    public InvoiceDto addInvoices(InvoiceDto invoiceDto) {
         invoicesRepository.save(new InvoiceEntity(invoiceDto.getInvoiceName(),
             invoiceDto.getCompanyName(),
             invoiceDto.getInvoiceDate()));
 
-        if (!invoiceDto.getItems().isEmpty()) {
-            ItemDto itemDto = new ItemDto(invoiceDto.getItems().get(0).getItemDescription(),
-                    invoiceDto.getItems().get(0).getItemCount(),
-                    invoiceDto.getItems().get(0).getItemFeeType(),
-                    invoiceDto.getItems().get(0).getItemUnitPrice());
-
-            System.out.println("in the addInvoices: " + itemDto);
-
-            itemRepository.save(new ItemEntity(itemDto.getItemDescription(),
-                    itemDto.getItemCount(),
-                    itemDto.getItemFeeType(),
-                    itemDto.getItemUnitPrice(),
-                    new InvoiceEntity(invoiceDto.getInvoiceName(),
-                        invoiceDto.getCompanyName(),
-                        invoiceDto.getInvoiceDate())));
-        }
+        return invoiceDto;
     }
 
     public List<InvoiceDto> fetchAllInvoices() {
         return invoicesRepository.findAll()
-                .stream()
-                .map(invoiceEntity -> {
-                    System.out.println("Invoice Entity inside fetchAllInvoices: " + invoiceEntity);
-                    return new InvoiceDto(invoiceEntity.getInvoiceName(),
-                            invoiceEntity.getCompanyName(),
-                            invoiceEntity.getInvoiceDate(),
-                            (invoiceEntity.getItems().stream().map(itemEntity -> {
-                                System.out.println("Items Entity inside fetchAllInvoices" + itemEntity);
-                                return new ItemDto(itemEntity.getItemDescription(),
-                                        itemEntity.getItemCount(),
-                                        itemEntity.getItemFeeType(),
-                                        itemEntity.getItemUnitPrice(),
-                                        new InvoiceDto(itemEntity.getInvoice().getInvoiceName(),
-                                                itemEntity.getInvoice().getCompanyName(),
-                                                itemEntity.getInvoice().getInvoiceDate()));
-                            }).collect(Collectors.toList()))
-                    );
-                }).collect(Collectors.toList());
+            .stream()
+            .map(invoiceEntity -> {
+                List<ItemDto> itemDtoList = this.fetchAllItems(invoiceEntity);
+                return new InvoiceDto(invoiceEntity.getInvoiceName(),
+                    invoiceEntity.getCompanyName(),
+                    invoiceEntity.getInvoiceDate(),
+                    this.fetchAllItems(invoiceEntity)
+                );
+            }).collect(Collectors.toList());
     }
 
-    public void addItem(ItemDto itemDto) {
-        Optional<InvoiceEntity> invoiceExists = invoicesRepository.findAll().stream()
-                .filter(invoiceEntity -> invoiceEntity.getInvoiceName().equals(itemDto.getInvoiceDto().getInvoiceName())).findAny();
-        if (invoiceExists.isEmpty()) {
-            invoicesRepository.save(new InvoiceEntity(itemDto.getInvoiceDto().getInvoiceName(),
-                    itemDto.getInvoiceDto().getCompanyName(),
-                    itemDto.getInvoiceDto().getInvoiceDate()
-                    ));
+    public InvoiceEntity fetchInvoiceByName(String invoiceName) {
+        InvoiceEntity invoiceEntity = invoicesRepository.findByInvoiceName(invoiceName);
+
+        List<ItemEntity> itemEntities = itemRepository.findAll()
+            .stream()
+            .filter(itemEntity -> itemEntity.getInvoice().getInvoiceName().equals(invoiceName))
+            .collect(Collectors.toList());
+
+        invoiceEntity.setItems(itemEntities);
+        System.out.println(invoiceEntity.getItems().get(0).getItemDescription());
+
+        return invoiceEntity;
+    }
+
+    public ItemDto addItem(String invoiceName, ItemDto itemDto) {
+        InvoiceEntity invoiceEntity = this.invoicesRepository.findByInvoiceName(invoiceName);
+        if (invoiceEntity != null) {
+            System.out.println("Invoice inside add Item: " + invoiceEntity.getInvoiceName() + " " + invoiceEntity.getCompanyName());
+        } else {
+            System.out.println("returned a null");
         }
+        ItemEntity itemEntity = new ItemEntity(itemDto.getItemDescription(),
+            itemDto.getItemCount(),
+            itemDto.getItemFeeType(),
+            itemDto.getItemUnitPrice(),
+            invoiceEntity);
 
-        itemRepository.save(new ItemEntity(itemDto.getItemDescription(),
-                itemDto.getItemCount(),
-                itemDto.getItemFeeType(),
-                itemDto.getItemUnitPrice(),
-                new InvoiceEntity(itemDto.getInvoiceDto().getInvoiceName(),
-                        itemDto.getInvoiceDto().getCompanyName(),
-                        itemDto.getInvoiceDto().getInvoiceDate())));
+        this.itemRepository.save(itemEntity);
+        return itemDto;
     }
-    public List<ItemDto> fetchAllItems(String invoiceName) {
+
+    public List<ItemDto> fetchAllItems(InvoiceEntity invoiceEntity) {
         return itemRepository.findAll()
                 .stream()
-                .filter(itemEntity -> itemEntity.getInvoice().getInvoiceName().equals(invoiceName))
+                .filter(itemEntity -> itemEntity.getInvoice().equals(invoiceEntity))
                 .map(itemEntity -> {
                     return new ItemDto(itemEntity.getItemDescription(),
                             itemEntity.getItemCount(),
                             itemEntity.getItemFeeType(),
-                            itemEntity.getItemUnitPrice(),
-                            new InvoiceDto(itemEntity.getInvoice().getInvoiceName(),
-                                    itemEntity.getInvoice().getCompanyName(),
-                                    itemEntity.getInvoice().getInvoiceDate())
+                            itemEntity.getItemUnitPrice()
+//                          itemEntity.getInvoice().getInvoiceName()
                     );
                 }).collect(Collectors.toList());
+    }
+
+    public List<ItemDto> addItems(String invoiceName, List<ItemDto> itemDtoList) {
+        InvoiceEntity invoiceEntity = this.invoicesRepository.findByInvoiceName(invoiceName);
+        if (invoiceEntity != null) {
+            System.out.println("Invoice inside addItems: " + invoiceEntity.getInvoiceName() + " " + invoiceEntity.getCompanyName());
+        } else {
+            System.out.println("returned a null");
+        }
+
+        itemDtoList
+            .stream()
+            .forEach(itemDto -> {
+                System.out.println(itemDto.getItemDescription());
+                ItemEntity itemEntity = new ItemEntity(itemDto.getItemDescription(),
+                    itemDto.getItemCount(),
+                    itemDto.getItemFeeType(),
+                    itemDto.getItemUnitPrice(),
+                    invoiceEntity);
+                this.itemRepository.save(itemEntity);
+            });
+
+        return itemDtoList;
     }
 }

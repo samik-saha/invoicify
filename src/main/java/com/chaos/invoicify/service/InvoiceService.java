@@ -1,6 +1,8 @@
 package com.chaos.invoicify.service;
 
+import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.ItemDto;
+import com.chaos.invoicify.entity.CompanyEntity;
 import com.chaos.invoicify.entity.ItemEntity;
 import com.chaos.invoicify.repository.InvoicesRepository;
 import com.chaos.invoicify.repository.ItemRepository;
@@ -23,7 +25,11 @@ public class InvoiceService {
 
     public InvoiceDto addInvoices(InvoiceDto invoiceDto) {
         invoicesRepository.save(new InvoiceEntity(invoiceDto.getInvoiceName(),
-            invoiceDto.getCompanyName(),
+                new CompanyEntity(invoiceDto.getCompanyDto().getName(),
+                        invoiceDto.getCompanyDto().getAddress(),
+                        invoiceDto.getCompanyDto().getContactName(),
+                        invoiceDto.getCompanyDto().getContactTitle(),
+                        invoiceDto.getCompanyDto().getContactPhoneNumber()),
             invoiceDto.getInvoiceDate()));
 
         return invoiceDto;
@@ -35,7 +41,11 @@ public class InvoiceService {
             .map(invoiceEntity -> {
                 List<ItemDto> itemDtoList = this.fetchAllItems(invoiceEntity);
                 return new InvoiceDto(invoiceEntity.getInvoiceName(),
-                    invoiceEntity.getCompanyName(),
+                        new CompanyDto(invoiceEntity.getCompany().getName(),
+                                invoiceEntity.getCompany().getAddress(),
+                                invoiceEntity.getCompany().getContactName(),
+                                invoiceEntity.getCompany().getContactTitle(),
+                                invoiceEntity.getCompany().getContactPhoneNumber()),
                     invoiceEntity.getInvoiceDate(),
                     this.fetchAllItems(invoiceEntity)
                 );
@@ -73,7 +83,7 @@ public class InvoiceService {
     public List<ItemDto> addItems(String invoiceName, List<ItemDto> itemDtoList) {
         InvoiceEntity invoiceEntity = this.invoicesRepository.findByInvoiceName(invoiceName);
         if (invoiceEntity != null) {
-            System.out.println("Invoice inside addItems: " + invoiceEntity.getInvoiceName() + " " + invoiceEntity.getCompanyName());
+            System.out.println("Invoice inside addItems: " + invoiceEntity.getInvoiceName() + " " );
         } else {
             System.out.println("returned a null");
         }

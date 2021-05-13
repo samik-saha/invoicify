@@ -20,28 +20,33 @@ public class InvoiceEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "invoice")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     List<ItemEntity> items;
 
     String invoiceName;
-    String companyName;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id", nullable = false)
+    private CompanyEntity company;
+
     String invoiceDate;
 
-    public InvoiceEntity(String invoiceName, String companyName, String invoiceDate) {
+    public InvoiceEntity(String invoiceName, CompanyEntity company,  String invoiceDate) {
         this.invoiceName = invoiceName;
-        this.companyName = companyName;
+        this.company = company;
         this.invoiceDate = invoiceDate;
     }
 
     @Override
     public String toString() {
         return "InvoiceEntity{" +
-            "id=" + id +
-            ", items=" + items +
-            ", invoiceName='" + invoiceName + '\'' +
-            ", companyName='" + companyName + '\'' +
-            ", invoiceDate='" + invoiceDate + '\'' +
-            '}';
+                "id=" + id +
+                ", items=" + items +
+                ", invoiceName='" + invoiceName + '\'' +
+                ", company=" + company +
+                ", invoiceDate='" + invoiceDate + '\'' +
+                '}';
     }
 }

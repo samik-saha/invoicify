@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class InvoiceDto {
     String invoiceName;
-    String companyName;
+    CompanyDto companyDto;
     String invoiceDate;
 
     List<ItemDto> itemDtoList;

@@ -18,22 +18,22 @@ public class CompanyController {
     }
 
     @PostMapping("/company")
-    public Object addCompany(@RequestBody CompanyDto companyDto){
+    public Object addCompany(@RequestBody CompanyDto companyDto) {
 
-        StatusCode statusCode =companyService.createCompany(companyDto);
+        StatusCode statusCode = companyService.createCompany(companyDto);
         Response response = null;
-        switch (statusCode){
+        switch (statusCode) {
             case SUCCESS:
                 response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
-                        "Company created successfully!");
+                    "Company created successfully!");
                 break;
             case DUPLICATE:
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                        "Company already exist");
+                    "Company already exist");
                 break;
             case NONAME:
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                        "Company name cannot be empty!");
+                    "Company name cannot be empty!");
                 break;
         }
 
@@ -43,31 +43,30 @@ public class CompanyController {
 
     @GetMapping("/company")
     @ResponseStatus(HttpStatus.OK)
-    public Object getCompanyList(){
-        List<CompanyDto> companyDtoList=companyService.getCompanyList();
+    public Object getCompanyList() {
+        List<CompanyDto> companyDtoList = companyService.getCompanyList();
         return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyDtoList);
     }
 
     @PutMapping("/company")
     @ResponseStatus(HttpStatus.OK)
-    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
+    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto) {
         Response response = null;
-        StatusCode statusCode=null;
+        StatusCode statusCode = null;
 
 
-        if (companyName == null&& companyDto.getName()!=null) {
-            statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
-        }
-        else if(companyName!=null){
+        if (companyName == null && companyDto.getName() != null) {
+            statusCode = companyService.updateCompany(companyDto.getName(), companyDto);
+        } else if (companyName != null) {
             statusCode = companyService.updateCompany(companyName, companyDto);
-        }else{
-             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                    "Company name is mandatory for updating company details!");
+        } else {
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Company name is mandatory for updating company details!");
         }
 
-        if (statusCode == StatusCode.SUCCESS){
+        if (statusCode == StatusCode.SUCCESS) {
             response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
-                    "Company updated successfully!");
+                "Company updated successfully!");
         }
         return response;
     }

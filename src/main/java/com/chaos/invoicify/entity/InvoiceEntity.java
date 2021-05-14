@@ -24,7 +24,7 @@ public class InvoiceEntity {
     Long id;
 
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "invoice")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     List<ItemEntity> items;
 
@@ -49,14 +49,4 @@ public class InvoiceEntity {
         this.items = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "InvoiceEntity{" +
-            "id=" + id +
-            ", items=" + items +
-            ", company=" + company +
-            ", createDate=" + createDate +
-            ", modifiedDate=" + modifiedDate +
-            '}';
-    }
 }

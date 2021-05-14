@@ -20,16 +20,15 @@ public class InvoicesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Object addInvoices(@RequestBody InvoiceDto invoiceDto){
+    public Object addInvoices(@RequestBody InvoiceDto invoiceDto) {
 
-        InvoiceDto invoiceDto1 =this.invoiceService.addInvoices(invoiceDto);
+        InvoiceDto invoiceDto1 = this.invoiceService.addInvoices(invoiceDto);
 
         Response response = null;
         if (invoiceDto1 == null) {
             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                "Company does not exist!");
-        }
-        else {
+                "Invoice Creation Not Successful!");
+        } else {
             response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
                 invoiceDto1);
         }
@@ -38,12 +37,30 @@ public class InvoicesController {
     }
 
     @GetMapping
-    public List<InvoiceDto> getAllInvoices() {return invoiceService.fetchAllInvoices();}
+    public List<InvoiceDto> getAllInvoices() {
+        return invoiceService.fetchAllInvoices();
+    }
 
-//    @PostMapping("{invoiceName}/items")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public List<ItemDto> addItems(@PathVariable String invoiceName, @RequestBody List<ItemDto> itemDtoList) {
-//        return this.invoiceService.addItems(invoiceName,itemDtoList);
-//    }
+    @GetMapping("{invoiceNumber}")
+    public List<InvoiceDto> searchInvoiceById(@PathVariable Long invoiceNumber) {
+        return invoiceService.fetchInvoiceById(invoiceNumber);
+    }
+
+    @PostMapping("{invoiceNumber}/items")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Object addItems(@PathVariable Long invoiceNumber, @RequestBody List<ItemDto> itemDtoList) {
+        InvoiceDto invoiceDto1 = this.invoiceService.addItems(invoiceNumber, itemDtoList);
+
+        Response response = null;
+        if (invoiceDto1 == null) {
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Item addition to Invoice Not Successful!");
+        } else {
+            response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+                invoiceDto1);
+        }
+
+        return response;
+    }
 
 }

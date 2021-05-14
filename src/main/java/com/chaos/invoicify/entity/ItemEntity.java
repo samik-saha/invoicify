@@ -34,16 +34,4 @@ public class ItemEntity {
         this.itemUnitPrice = itemUnitPrice;
         this.invoice = invoice;
     }
-
-    @Override
-    public String toString() {
-        return "ItemEntity{" +
-            "id=" + id +
-            ", itemDescription='" + itemDescription + '\'' +
-            ", itemCount=" + itemCount +
-            ", itemFeeType=" + itemFeeType +
-            ", itemUnitPrice=" + itemUnitPrice +
-            ", invoice=" + invoice +
-            '}';
-    }
 }

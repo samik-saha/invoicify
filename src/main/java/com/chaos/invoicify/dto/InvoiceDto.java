@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,6 +21,7 @@ public class InvoiceDto {
 
     public InvoiceDto(String companyName) {
         this.companyName = companyName;
+        this.itemDtoList = new ArrayList<>();
     }
 
     public InvoiceDto(String companyName, List<ItemDto> itemDtoList) {

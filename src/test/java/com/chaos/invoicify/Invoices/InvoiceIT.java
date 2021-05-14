@@ -4,10 +4,8 @@ import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.dto.InvoiceDto;
 import com.chaos.invoicify.helper.FeeType;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -44,12 +40,9 @@ public class InvoiceIT {
     @Autowired
     ObjectMapper objectMapper;
 
-    private CompanyDto companyDto;
-
     @BeforeEach
     public void setup() throws Exception {
-        companyDto =
-            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+        CompanyDto companyDto = new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
 
         mockMvc
             .perform(

@@ -2,12 +2,14 @@ package com.chaos.invoicify.controller;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.Response;
+import com.chaos.invoicify.helper.CompanyView;
 import com.chaos.invoicify.helper.StatusCode;
 import com.chaos.invoicify.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class CompanyController {
@@ -18,6 +20,7 @@ public class CompanyController {
     }
 
     @PostMapping("/company")
+    @ResponseStatus(HttpStatus.CREATED)
     public Object addCompany(@RequestBody CompanyDto companyDto){
 
         StatusCode statusCode =companyService.createCompany(companyDto);
@@ -70,6 +73,18 @@ public class CompanyController {
                 "Company updated successfully!");
         }
         return response;
+    }
+
+    @GetMapping("company-list")
+    @ResponseStatus(HttpStatus.OK)
+    public Object getSimpleCompanyList(){
+        List<CompanyDto> companyDtoList=companyService.getCompanyList();
+        List<CompanyView> companyViewList = companyDtoList.stream().map(companyDto ->
+            new CompanyView(companyDto.getName(),
+                companyDto.getAddress().getCity(),
+                companyDto.getAddress().getState())).collect(Collectors.toList());
+
+        return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyViewList);
     }
 
 }

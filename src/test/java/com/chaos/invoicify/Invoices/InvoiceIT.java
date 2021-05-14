@@ -163,70 +163,70 @@ public class InvoiceIT {
             )));
     }
 
-    @Test
-    public void getAllInvoiceWithMultipleItems() throws Exception {
-        CompanyDto companyDto =
-            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
-
-        InvoiceDto invoiceDto = new InvoiceDto("Company1");
-
-        mockMvc.perform(post("/invoices")
-            .content(objectMapper.writeValueAsString(invoiceDto))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.invoiceName").value("Invoice1"))
-            .andExpect(jsonPath("$.companyDto.name").value("Company1"))
-            .andExpect(jsonPath("$.companyDto.address").value("Address 123"))
-            .andExpect(jsonPath("$.companyDto.contactName").value("Samik"))
-            .andExpect(jsonPath("$.companyDto.contactTitle").value("Account Payable"))
-            .andExpect(jsonPath("$.companyDto.contactPhoneNumber").value("467-790-0128"))
-            .andExpect(jsonPath("$.invoiceDate").value("2021-05-08"))
-            .andDo(document("AddInvoices"));
-
-        ItemDto itemDTo1 = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10);
-        ItemDto itemDTo2 = new ItemDto("Item2", 1, FeeType.FLATFEES, 250.0);
-        ItemDto itemDTo3 = new ItemDto("Item3", 10, FeeType.RATEBASED, 30.10);
-
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
-
-        mockMvc.perform(post("/invoices/Invoice1/items")
-            .content(objectMapper.writeValueAsString(itemDtoList))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("[0].itemDescription").value("Item1"))
-            .andExpect(jsonPath("[0].itemCount").value(10))
-            .andExpect(jsonPath("[0].itemFeeType").value(FeeType.RATEBASED.name()))
-            .andExpect(jsonPath("[0].itemUnitPrice").value(20.10))
-            .andExpect(jsonPath("[1].itemDescription").value("Item2"))
-            .andDo(document("AddItems"));
-
-        mockMvc.perform(get("/invoices"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("length()").value(1))
-            .andExpect(jsonPath("[0].invoiceName").value("Invoice1"))
-            .andExpect(jsonPath("[0].companyDto.name").value("Company1"))
-            .andExpect(jsonPath("[0].companyDto.address").value("Address 123"))
-            .andExpect(jsonPath("[0].companyDto.contactName").value("Samik"))
-            .andExpect(jsonPath("[0].companyDto.contactTitle").value("Account Payable"))
-            .andExpect(jsonPath("[0].companyDto.contactPhoneNumber").value("467-790-0128"))
-            .andExpect(jsonPath("[0].invoiceDate").value("2021-05-08"))
-            .andExpect(jsonPath("[0].itemDtoList[0].itemDescription").value("Item1"))
-            .andExpect(jsonPath("[0].itemDtoList[0].itemCount").value(10))
-            .andExpect(jsonPath("[0].itemDtoList[0].itemFeeType").value(FeeType.RATEBASED.name()))
-            .andExpect(jsonPath("[0].itemDtoList[0].itemUnitPrice").value(20.10))
-            .andDo(document("GetInvoices", responseFields(
-                fieldWithPath("[0].invoiceName").description("Invoice1")
-                , fieldWithPath("[0].companyDto.name").description("Company1")
-                , fieldWithPath("[0].companyDto.address").description("Address 123")
-                , fieldWithPath("[0].companyDto.contactName").description("Samik")
-                , fieldWithPath("[0].companyDto.contactTitle").description("Account Payable")
-                , fieldWithPath("[0].companyDto.contactPhoneNumber").description("467-790-0128")
-                , fieldWithPath("[0].invoiceDate").description("2021-05-08")
-                , fieldWithPath("[0].itemDtoList[0].itemDescription").description("Item1")
-                , fieldWithPath("[0].itemDtoList[0].itemCount").description(10)
-                , fieldWithPath("[0].itemDtoList[0].itemFeeType").description(FeeType.RATEBASED.name())
-                , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description(20.10)
-            )));
-    }
+//    @Test
+//    public void getAllInvoiceWithMultipleItems() throws Exception {
+//        CompanyDto companyDto =
+//            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+//
+//        InvoiceDto invoiceDto = new InvoiceDto("Company1");
+//
+//        mockMvc.perform(post("/invoices")
+//            .content(objectMapper.writeValueAsString(invoiceDto))
+//            .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isCreated())
+//            .andExpect(jsonPath("$.invoiceName").value("Invoice1"))
+//            .andExpect(jsonPath("$.companyDto.name").value("Company1"))
+//            .andExpect(jsonPath("$.companyDto.address").value("Address 123"))
+//            .andExpect(jsonPath("$.companyDto.contactName").value("Samik"))
+//            .andExpect(jsonPath("$.companyDto.contactTitle").value("Account Payable"))
+//            .andExpect(jsonPath("$.companyDto.contactPhoneNumber").value("467-790-0128"))
+//            .andExpect(jsonPath("$.invoiceDate").value("2021-05-08"))
+//            .andDo(document("AddInvoices"));
+//
+//        ItemDto itemDTo1 = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10);
+//        ItemDto itemDTo2 = new ItemDto("Item2", 1, FeeType.FLATFEES, 250.0);
+//        ItemDto itemDTo3 = new ItemDto("Item3", 10, FeeType.RATEBASED, 30.10);
+//
+//        List<ItemDto> itemDtoList = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
+//
+//        mockMvc.perform(post("/invoices/Invoice1/items")
+//            .content(objectMapper.writeValueAsString(itemDtoList))
+//            .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isCreated())
+//            .andExpect(jsonPath("[0].itemDescription").value("Item1"))
+//            .andExpect(jsonPath("[0].itemCount").value(10))
+//            .andExpect(jsonPath("[0].itemFeeType").value(FeeType.RATEBASED.name()))
+//            .andExpect(jsonPath("[0].itemUnitPrice").value(20.10))
+//            .andExpect(jsonPath("[1].itemDescription").value("Item2"))
+//            .andDo(document("AddItems"));
+//
+//        mockMvc.perform(get("/invoices"))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("length()").value(1))
+//            .andExpect(jsonPath("[0].invoiceName").value("Invoice1"))
+//            .andExpect(jsonPath("[0].companyDto.name").value("Company1"))
+//            .andExpect(jsonPath("[0].companyDto.address").value("Address 123"))
+//            .andExpect(jsonPath("[0].companyDto.contactName").value("Samik"))
+//            .andExpect(jsonPath("[0].companyDto.contactTitle").value("Account Payable"))
+//            .andExpect(jsonPath("[0].companyDto.contactPhoneNumber").value("467-790-0128"))
+//            .andExpect(jsonPath("[0].invoiceDate").value("2021-05-08"))
+//            .andExpect(jsonPath("[0].itemDtoList[0].itemDescription").value("Item1"))
+//            .andExpect(jsonPath("[0].itemDtoList[0].itemCount").value(10))
+//            .andExpect(jsonPath("[0].itemDtoList[0].itemFeeType").value(FeeType.RATEBASED.name()))
+//            .andExpect(jsonPath("[0].itemDtoList[0].itemUnitPrice").value(20.10))
+//            .andDo(document("GetInvoices", responseFields(
+//                fieldWithPath("[0].invoiceName").description("Invoice1")
+//                , fieldWithPath("[0].companyDto.name").description("Company1")
+//                , fieldWithPath("[0].companyDto.address").description("Address 123")
+//                , fieldWithPath("[0].companyDto.contactName").description("Samik")
+//                , fieldWithPath("[0].companyDto.contactTitle").description("Account Payable")
+//                , fieldWithPath("[0].companyDto.contactPhoneNumber").description("467-790-0128")
+//                , fieldWithPath("[0].invoiceDate").description("2021-05-08")
+//                , fieldWithPath("[0].itemDtoList[0].itemDescription").description("Item1")
+//                , fieldWithPath("[0].itemDtoList[0].itemCount").description(10)
+//                , fieldWithPath("[0].itemDtoList[0].itemFeeType").description(FeeType.RATEBASED.name())
+//                , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description(20.10)
+//            )));
+//    }
 
 }

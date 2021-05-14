@@ -1,5 +1,6 @@
 = Invoicify API
-Welcome to the Invoicify Application by Chaos!
+
+== Welcome to the Invoicify Application by Chaos!
 
 === Invoices
 
@@ -26,3 +27,47 @@ include::{snippets}/AddItems/http-request.adoc[]
 
 .response
 include::{snippets}/AddItems/http-response.adoc[]
+
+=== Companies
+==== Add Company
+
+.request
+include::{snippets}/Create-Company/http-request.adoc[]
+.Request Fields
+include::{snippets}/Create-Company/request-fields.adoc[]
+.response
+include::{snippets}/Create-Company/http-response.adoc[]
+.Response Fields
+include::{snippets}/Create-Company/response-fields.adoc[]
+
+==== Get All Companies
+
+.request
+include::{snippets}/Get-Many-Companies/http-request.adoc[]
+.response
+include::{snippets}/Get-Many-Companies/http-response.adoc[]
+.Response Fields
+include::{snippets}/Get-Many-Companies/response-fields.adoc[]
+
+==== Get Simple Company List
+
+.request
+include::{snippets}/Company-List/http-request.adoc[]
+.response
+include::{snippets}/Company-List/http-response.adoc[]
+.Response Fields
+include::{snippets}/Company-List/response-fields.adoc[]
+
+==== Update Company
+
+.request
+include::{snippets}/Update-Company/http-request.adoc[]
+.Request Parameters
+include::{snippets}/Update-Company/request-parameters.adoc[]
+.Request Fields
+include::{snippets}/Update-Company/request-fields.adoc[]
+
+.response
+include::{snippets}/Update-Company/http-response.adoc[]
+.Response Fields
+include::{snippets}/Update-Company/response-fields.adoc[]

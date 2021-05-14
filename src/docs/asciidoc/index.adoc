@@ -1,10 +1,9 @@
 = Invoicify API
-
-== Welcome to the Invoicify Application by Chaos!
+Welcome to the Invoicify Application by Chaos!
 
 === Invoices
 
-GetInvoices
+==== Get Invoices
 
 .request
 include::{snippets}/GetInvoices/http-request.adoc[]
@@ -12,7 +11,7 @@ include::{snippets}/GetInvoices/http-request.adoc[]
 .response
 include::{snippets}/GetInvoices/http-response.adoc[]
 
-AddInvoices
+==== Add Invoices
 
 .request
 include::{snippets}/AddInvoices/http-request.adoc[]
@@ -20,7 +19,7 @@ include::{snippets}/AddInvoices/http-request.adoc[]
 .response
 include::{snippets}/AddInvoices/http-response.adoc[]
 
-AddItems
+==== Add Items
 
 .request
 include::{snippets}/AddItems/http-request.adoc[]

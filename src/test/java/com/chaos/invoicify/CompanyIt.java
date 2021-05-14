@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @Transactional
 public class CompanyIt {
-  Address address1, address2;
   @Autowired  private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   private CompanyDto companyDto, companyDto2;
+  Address address1, address2;
 
   @BeforeEach
   public void setup() {

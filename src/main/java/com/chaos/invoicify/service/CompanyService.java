@@ -45,33 +45,21 @@ public class CompanyService {
         }
 
 
-    public StatusCode updateCompany(CompanyDto companyDto) {
-        CompanyEntity companyEntity = companyRepository.findByName(companyDto.getName());
-        StatusCode statusCode = StatusCode.OTHER;
-
-        if (companyEntity != null) {
-            companyEntity.setAddress(companyDto.getAddress());
-            companyEntity.setContactName(companyDto.getContactName());
-            companyEntity.setContactTitle(companyDto.getContactTitle());
-            companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
-            companyRepository.save(companyEntity);
-            statusCode = StatusCode.SUCCESS;
-        }
-
-        return statusCode;
-
-    }
-
     public StatusCode updateCompany(String companyName, CompanyDto companyDto) {
         CompanyEntity companyEntity = companyRepository.findByName(companyName);
         StatusCode statusCode = StatusCode.OTHER;
 
         if (companyEntity != null) {
-            companyEntity.setName(companyDto.getName());
-            companyEntity.setAddress(companyDto.getAddress());
-            companyEntity.setContactName(companyDto.getContactName());
-            companyEntity.setContactTitle(companyDto.getContactTitle());
-            companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
+            if(companyDto.getName()!=null)
+                companyEntity.setName(companyDto.getName());
+            if(companyDto.getAddress()!=null)
+                companyEntity.setAddress(companyDto.getAddress());
+            if(companyDto.getContactName()!=null)
+                companyEntity.setContactName(companyDto.getContactName());
+            if(companyDto.getContactTitle()!=null)
+                companyEntity.setContactTitle(companyDto.getContactTitle());
+            if(companyDto.getContactPhoneNumber()!=null)
+                companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
             companyRepository.save(companyEntity);
             statusCode = StatusCode.SUCCESS;
         }

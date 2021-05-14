@@ -25,15 +25,15 @@ public class CompanyController {
         switch (statusCode){
             case SUCCESS:
                 response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
-                        "Company created successfully!");
+                    "Company created successfully!");
                 break;
             case DUPLICATE:
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                        "Company already exist");
+                    "Company already exist");
                 break;
             case NONAME:
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                        "Company name cannot be empty!");
+                    "Company name cannot be empty!");
                 break;
         }
 
@@ -61,13 +61,13 @@ public class CompanyController {
         else if(companyName!=null){
             statusCode = companyService.updateCompany(companyName, companyDto);
         }else{
-             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                    "Company name is mandatory for updating company details!");
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Company name is mandatory for updating company details!");
         }
 
         if (statusCode == StatusCode.SUCCESS){
             response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
-                    "Company updated successfully!");
+                "Company updated successfully!");
         }
         return response;
     }

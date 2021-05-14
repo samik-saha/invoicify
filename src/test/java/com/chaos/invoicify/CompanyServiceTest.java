@@ -33,7 +33,7 @@ public class CompanyServiceTest {
     companyDto =
         new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     companyDto2 =
-              new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
+        new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     companyEntity =
         new CompanyEntity("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
   }

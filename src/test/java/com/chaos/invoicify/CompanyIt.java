@@ -2,6 +2,7 @@ package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.entity.CompanyEntity;
+import com.chaos.invoicify.helper.Address;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,13 +36,16 @@ public class CompanyIt {
   @Autowired private ObjectMapper objectMapper;
 
   private CompanyDto companyDto, companyDto2;
+  Address address1, address2;
 
   @BeforeEach
   public void setup() {
+    address1 = new Address("123 ABC Street", "Toronto", "ON", "Canada", "A1B 2D3");
+    address2 = new Address("456 ABC Street", "Cary", "NC", "US", "12345");
     companyDto =
-            new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+            new CompanyDto("Company1", address1, "Samik", "Account Payable", "467-790-0128");
     companyDto2 =
-            new CompanyDto("Company2", "Address 456", "Rajendra", "Account Payable", "123-456-7890");
+            new CompanyDto("Company2", address2, "Rajendra", "Account Payable", "123-456-7890");
   }
 
   @Test
@@ -58,7 +63,11 @@ public class CompanyIt {
                 "Create-Company",
                 requestFields(
                     fieldWithPath("name").description("Company name"),
-                    fieldWithPath("address").description("Company address"),
+                    fieldWithPath("address.street").description("Address Line 1"),
+                    fieldWithPath("address.city").description("City"),
+                    fieldWithPath("address.state").description("Street Address"),
+                    fieldWithPath("address.country").description("Country"),
+                    fieldWithPath("address.zipCode").description("Zip Code"),
                     fieldWithPath("contactName").description("Contact name"),
                     fieldWithPath("contactTitle").description("Contact title"),
                     fieldWithPath("contactPhoneNumber").description("Contact phone number")),
@@ -101,7 +110,7 @@ public class CompanyIt {
         .andExpect(jsonPath("$.status_code").value(200))
         .andExpect(jsonPath("$.data.length()").value(1))
         .andExpect(jsonPath("$.data[0].name").value("Company1"))
-        .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+        .andExpect(jsonPath("$.data[0].address").value(address1))
         .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
         .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
         .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"))
@@ -113,7 +122,11 @@ public class CompanyIt {
                     fieldWithPath("status_code").description("Return the http status code"),
                     fieldWithPath("data").description("List of companies"),
                     fieldWithPath("data[0].name").description("Company name"),
-                    fieldWithPath("data[0].address").description("Company address"),
+                    fieldWithPath("data[0].address.street").description("Address Line 1"),
+                    fieldWithPath("data[0].address.city").description("City"),
+                    fieldWithPath("data[0].address.state").description("Street Address"),
+                    fieldWithPath("data[0].address.country").description("Country"),
+                    fieldWithPath("data[0].address.zipCode").description("Zip Code"),
                     fieldWithPath("data[0].contactName").description("Contact name"),
                     fieldWithPath("data[0].contactTitle").description("Contact title"),
                     fieldWithPath("data[0].contactPhoneNumber")
@@ -139,12 +152,12 @@ public class CompanyIt {
             .andExpect(jsonPath("$.status_code").value(200))
             .andExpect(jsonPath("$.data.length()").value(2))
             .andExpect(jsonPath("$.data[0].name").value("Company1"))
-            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].address").value(address1))
             .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
             .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
             .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"))
             .andExpect(jsonPath("$.data[1].name").value("Company2"))
-            .andExpect(jsonPath("$.data[1].address").value("Address 456"))
+            .andExpect(jsonPath("$.data[1].address").value(address2))
             .andExpect(jsonPath("$.data[1].contactName").value("Rajendra"))
             .andExpect(jsonPath("$.data[1].contactTitle").value("Account Payable"))
             .andExpect(jsonPath("$.data[1].contactPhoneNumber").value("123-456-7890"))
@@ -156,7 +169,11 @@ public class CompanyIt {
                                     fieldWithPath("status_code").description("Return the http status code"),
                                     fieldWithPath("data").description("List of companies"),
                                     fieldWithPath("data[0].name").description("Company name"),
-                                    fieldWithPath("data[0].address").description("Company address"),
+                                    fieldWithPath("data[0].address.street").description("Address Line 1"),
+                                    fieldWithPath("data[0].address.city").description("City"),
+                                    fieldWithPath("data[0].address.state").description("Street Address"),
+                                    fieldWithPath("data[0].address.country").description("Country"),
+                                    fieldWithPath("data[0].address.zipCode").description("Zip Code"),
                                     fieldWithPath("data[0].contactName").description("Contact name"),
                                     fieldWithPath("data[0].contactTitle").description("Contact title"),
                                     fieldWithPath("data[0].contactPhoneNumber")
@@ -187,7 +204,7 @@ public class CompanyIt {
   @Test
   public void addCompanyWithBlankNameTest () throws Exception{
     CompanyDto companyDtoNullName =
-            new CompanyDto(null, "Address 123", "Samik", "Account Payable", "467-790-0128");
+            new CompanyDto(null, address1, "Samik", "Account Payable", "467-790-0128");
     mockMvc
             .perform(
                     post("/company")
@@ -198,7 +215,7 @@ public class CompanyIt {
             .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
 
     CompanyDto companyDtoBlankName =
-            new CompanyDto("", "Address 123", "Samik", "Account Payable", "467-790-0128");
+            new CompanyDto("", address1, "Samik", "Account Payable", "467-790-0128");
     mockMvc
             .perform(
                     post("/company")
@@ -222,7 +239,7 @@ public class CompanyIt {
 
     CompanyDto updatedCompanyDto = new CompanyDto();
     updatedCompanyDto.setName("Company1");
-    updatedCompanyDto.setAddress("New Address 123");
+    updatedCompanyDto.setAddress(address2);
     updatedCompanyDto.setContactName("ABCD");
     updatedCompanyDto.setContactTitle("XYZ");
     updatedCompanyDto.setContactPhoneNumber("999-999-9999");
@@ -252,7 +269,7 @@ public class CompanyIt {
 
     mockMvc
             .perform(get("/company"))
-            .andExpect(jsonPath("$.data[0].address").value("New Address 123"))
+            .andExpect(jsonPath("$.data[0].address").value(address2))
             .andExpect(jsonPath("$.data[0].contactName").value("ABCD"))
             .andExpect(jsonPath("$.data[0].contactTitle").value("XYZ"))
             .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("999-999-9999"));
@@ -338,6 +355,25 @@ public class CompanyIt {
             .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
             .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
 
+  }
+
+  @Test
+  public void getSimpleCompanyListTest() throws Exception{
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDto)))
+            .andExpect(status().isCreated());
+
+    mockMvc
+            .perform(get("/company-list"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+            .andExpect(jsonPath("$.data[0].name").value("Company1"))
+            .andExpect(jsonPath("$.data[0].city").value("Toronto"))
+            .andExpect(jsonPath("$.data[0].state").value("ON"));;
   }
 
 }

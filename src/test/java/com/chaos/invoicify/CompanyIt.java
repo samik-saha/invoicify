@@ -1,7 +1,6 @@
 package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
-import com.chaos.invoicify.entity.CompanyEntity;
 import com.chaos.invoicify.helper.Address;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,12 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @Transactional
 public class CompanyIt {
-  @Autowired private MockMvc mockMvc;
-
-  @Autowired private ObjectMapper objectMapper;
-
-  private CompanyDto companyDto, companyDto2;
   Address address1, address2;
+  @Autowired  private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+  private CompanyDto companyDto, companyDto2;
 
   @BeforeEach
   public void setup() {
@@ -305,7 +299,15 @@ public class CompanyIt {
             .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
             .andExpect(jsonPath("$.data[0].name").value("Company1"))
             .andExpect(jsonPath("$.data[0].city").value("Toronto"))
-            .andExpect(jsonPath("$.data[0].state").value("ON"));;
+            .andExpect(jsonPath("$.data[0].state").value("ON"))
+            .andDo(document("Company-List",responseFields(
+                    fieldWithPath("status").description("Return the http status description"),
+                    fieldWithPath("status_code").description("Return the http status code"),
+                    fieldWithPath("data").description("List of companies"),
+                    fieldWithPath("data[0].name").description("Company name"),
+                    fieldWithPath("data[0].city").description("City"),
+                    fieldWithPath("data[0].state").description("State"))
+            ));
   }
 
 }

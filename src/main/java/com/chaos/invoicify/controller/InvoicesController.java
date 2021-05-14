@@ -2,6 +2,8 @@ package com.chaos.invoicify.controller;
 
 import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.dto.Response;
+import com.chaos.invoicify.helper.StatusCode;
 import com.chaos.invoicify.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +20,30 @@ public class InvoicesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public InvoiceDto addInvoices(@RequestBody InvoiceDto invoiceDto){
-        return this.invoiceService.addInvoices(invoiceDto);
+    public Object addInvoices(@RequestBody InvoiceDto invoiceDto){
+
+        InvoiceDto invoiceDto1 =this.invoiceService.addInvoices(invoiceDto);
+
+        Response response = null;
+        if (invoiceDto1 == null) {
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Company does not exist!");
+        }
+        else {
+            response = new Response(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED.value(),
+                invoiceDto1);
+        }
+
+        return response;
     }
 
     @GetMapping
     public List<InvoiceDto> getAllInvoices() {return invoiceService.fetchAllInvoices();}
 
-    @PostMapping("{invoiceName}/items")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<ItemDto> addItems(@PathVariable String invoiceName, @RequestBody List<ItemDto> itemDtoList) {
-        return this.invoiceService.addItems(invoiceName,itemDtoList);
-    }
+//    @PostMapping("{invoiceName}/items")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public List<ItemDto> addItems(@PathVariable String invoiceName, @RequestBody List<ItemDto> itemDtoList) {
+//        return this.invoiceService.addItems(invoiceName,itemDtoList);
+//    }
 
 }

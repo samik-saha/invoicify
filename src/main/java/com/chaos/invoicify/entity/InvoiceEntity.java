@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,28 +28,35 @@ public class InvoiceEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     List<ItemEntity> items;
 
-    String invoiceName;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", nullable = false)
     private CompanyEntity company;
 
-    String invoiceDate;
+    LocalDate createDate;
+    LocalDate modifiedDate;
 
-    public InvoiceEntity(String invoiceName, CompanyEntity company,  String invoiceDate) {
-        this.invoiceName = invoiceName;
+    public InvoiceEntity(CompanyEntity company, LocalDate createDate, LocalDate modifiedDate) {
         this.company = company;
-        this.invoiceDate = invoiceDate;
+        this.createDate = createDate;
+        this.modifiedDate = modifiedDate;
+    }
+
+    public InvoiceEntity(CompanyEntity company) {
+        this.company = company;
+        this.createDate = LocalDate.now();
+        this.modifiedDate = LocalDate.now();
+        this.items = new ArrayList<>();
     }
 
     @Override
     public String toString() {
         return "InvoiceEntity{" +
-                "id=" + id +
-                ", items=" + items +
-                ", invoiceName='" + invoiceName + '\'' +
-                ", company=" + company +
-                ", invoiceDate='" + invoiceDate + '\'' +
-                '}';
+            "id=" + id +
+            ", items=" + items +
+            ", company=" + company +
+            ", createDate=" + createDate +
+            ", modifiedDate=" + modifiedDate +
+            '}';
     }
 }

@@ -2,7 +2,6 @@ package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.entity.CompanyEntity;
-import com.chaos.invoicify.helper.Address;
 import com.chaos.invoicify.helper.StatusCode;
 import com.chaos.invoicify.repository.CompanyRepository;
 import com.chaos.invoicify.service.CompanyService;
@@ -28,18 +27,15 @@ public class CompanyServiceTest {
   CompanyEntity companyEntity;
   CompanyDto companyDto;
   CompanyDto companyDto2;
-  Address address1, address2;
 
   @BeforeEach
   public void setup() {
-    address1 = new Address("123 ABC Street", "Toronto", "ON", "Canada", "A1B 2D3");
-    address2 = new Address("456 ABC Street", "Cary", "NC", "US", "12345");
     companyDto =
-        new CompanyDto("Comapany1", address1, "Samik", "Account Payable", "467-790-0128");
+        new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     companyDto2 =
-              new CompanyDto("Comapany1", address2, "Samik", "Account Payable", "467-790-0128");
+        new CompanyDto("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
     companyEntity =
-        new CompanyEntity("Comapany1", address1, "Samik", "Account Payable", "467-790-0128");
+        new CompanyEntity("Comapany1", "Adress 123", "Samik", "Account Payable", "467-790-0128");
   }
 
   @Test

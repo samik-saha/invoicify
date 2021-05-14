@@ -21,7 +21,6 @@ public class InvoiceDto {
 
     public InvoiceDto(String companyName) {
         this.companyName = companyName;
-        this.itemDtoList = new ArrayList<>();
     }
 
     public InvoiceDto(String companyName, List<ItemDto> itemDtoList) {

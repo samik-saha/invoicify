@@ -252,6 +252,11 @@ public class CompanyIt {
                             requestFields(
                                     fieldWithPath("name").description("Company name"),
                                     fieldWithPath("address").description("Company address"),
+                                    fieldWithPath("address.street").description("Address Line 1"),
+                                    fieldWithPath("address.city").description("City"),
+                                    fieldWithPath("address.state").description("Street Address"),
+                                    fieldWithPath("address.country").description("Country"),
+                                    fieldWithPath("address.zipCode").description("Zip Code"),
                                     fieldWithPath("contactName").description("Contact name"),
                                     fieldWithPath("contactTitle").description("Contact title"),
                                     fieldWithPath("contactPhoneNumber").description("Contact phone number")),
@@ -311,7 +316,7 @@ public class CompanyIt {
     mockMvc
             .perform(get("/company"))
             .andExpect(jsonPath("$.data[0].name").value("Apple"))
-            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].address").value(address1))
             .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
             .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
             .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
@@ -344,7 +349,7 @@ public class CompanyIt {
     mockMvc
             .perform(get("/company"))
             .andExpect(jsonPath("$.data[0].name").value("Company1"))
-            .andExpect(jsonPath("$.data[0].address").value("Address 123"))
+            .andExpect(jsonPath("$.data[0].address").value(address1))
             .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
             .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
             .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));

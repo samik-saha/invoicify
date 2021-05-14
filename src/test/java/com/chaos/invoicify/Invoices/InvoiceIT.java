@@ -3,6 +3,7 @@ package com.chaos.invoicify.Invoices;
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.helper.Address;
 import com.chaos.invoicify.helper.FeeType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -40,9 +41,17 @@ public class InvoiceIT {
     @Autowired
     ObjectMapper objectMapper;
 
+    Address address1, address2;
+    private CompanyDto companyDto, companyDto2;
+
     @BeforeEach
     public void setup() throws Exception {
-        CompanyDto companyDto = new CompanyDto("Company1", "Address 123", "Samik", "Account Payable", "467-790-0128");
+        address1 = new Address("123 ABC Street", "Toronto", "ON", "Canada", "A1B 2D3");
+        address2 = new Address("456 ABC Street", "Cary", "NC", "US", "12345");
+        companyDto =
+            new CompanyDto("Company1", address1, "Samik", "Account Payable", "467-790-0128");
+        companyDto2 =
+            new CompanyDto("Company2", address2, "Rajendra", "Account Payable", "123-456-7890");
 
         mockMvc
             .perform(

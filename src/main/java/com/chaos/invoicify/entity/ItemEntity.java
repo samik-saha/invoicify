@@ -21,13 +21,14 @@ public class ItemEntity {
     String itemDescription;
     int itemCount;
     FeeType itemFeeType;
-    Double itemUnitPrice;
+    @Column(columnDefinition = "DECIMAL(15,2)")
+    double itemUnitPrice;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id", nullable = false)
     private InvoiceEntity invoice;
 
-    public ItemEntity(String itemDescription, int itemCount, FeeType itemFeeType, Double itemUnitPrice, InvoiceEntity invoice) {
+    public ItemEntity(String itemDescription, int itemCount, FeeType itemFeeType, double itemUnitPrice, InvoiceEntity invoice) {
         this.itemDescription = itemDescription;
         this.itemCount = itemCount;
         this.itemFeeType = itemFeeType;

@@ -24,8 +24,7 @@ public class InvoiceEntity {
     Long id;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice",cascade = CascadeType.ALL)
     List<ItemEntity> items;
 
 

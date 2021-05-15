@@ -51,29 +51,24 @@ public class CompanyController {
         return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyDtoList);
     }
 
-    @PutMapping("/company")
+    @PostMapping("/company/{companyName}")
     @ResponseStatus(HttpStatus.OK)
-    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
-        Response response = null;
-        StatusCode statusCode=null;
+    public Response updateCompany(@PathVariable String companyName, @RequestBody CompanyDto companyDto){
+        Response response;
 
-
-        if (companyName == null&& companyDto.getName()!=null) {
-            statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
-        }
-        else if(companyName!=null){
-            statusCode = companyService.updateCompany(companyName, companyDto);
-        }else{
+        StatusCode statusCode = companyService.updateCompany(companyName, companyDto);
+        if(statusCode == StatusCode.NOTFOUND){
             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                "Company name is mandatory for updating company details!");
+                    "Company does not exist!");
+        }
+        else{
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                    "Company updated successfully!");
         }
 
-        if (statusCode == StatusCode.SUCCESS){
-            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
-                "Company updated successfully!");
-        }
         return response;
     }
+
 
     @GetMapping("company-list")
     @ResponseStatus(HttpStatus.OK)

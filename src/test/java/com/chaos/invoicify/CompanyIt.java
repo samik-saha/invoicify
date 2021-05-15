@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -240,7 +239,7 @@ public class CompanyIt {
 
     mockMvc
             .perform(
-                    put("/company")
+                    post("/company/{companyName}", "Company1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatedCompanyDto)))
             .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
@@ -290,28 +289,27 @@ public class CompanyIt {
     updatedCompanyDto.setName("Apple");
 
     mockMvc
-            .perform(
-                    put("/company").param("companyName","Company1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updatedCompanyDto)))
-            .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
-            .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
-            .andExpect(jsonPath("$.data").value("Company updated successfully!"))
-            .andDo(
-                    document(
-                            "Update-Company",
-                            requestParameters( parameterWithName("companyName").description("Company name to be updated")),
-                            requestFields(
-                                    fieldWithPath("name").description("Company name"),
-                                    fieldWithPath("address").description("Company address"),
-                                    fieldWithPath("contactName").description("Contact name"),
-                                    fieldWithPath("contactTitle").description("Contact title"),
-                                    fieldWithPath("contactPhoneNumber").description("Contact phone number")),
-                            responseFields(
-                                    fieldWithPath("status").description("Return the http status description"),
-                                    fieldWithPath("status_code").description("Return the http status code"),
-                                    fieldWithPath("data").description("Return company update status"))));
-
+        .perform(
+            post("/company/{companyName}", "Company1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+        .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+        .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+        .andExpect(jsonPath("$.data").value("Company updated successfully!"))
+        .andDo(
+            document(
+                "Update-Company",
+                pathParameters(parameterWithName("companyName").description("Company name to be updated")),
+                requestFields(
+                    fieldWithPath("name").description("Company name"),
+                    fieldWithPath("address").description("Company address"),
+                    fieldWithPath("contactName").description("Contact name"),
+                    fieldWithPath("contactTitle").description("Contact title"),
+                    fieldWithPath("contactPhoneNumber").description("Contact phone number")),
+                responseFields(
+                    fieldWithPath("status").description("Return the http status description"),
+                    fieldWithPath("status_code").description("Return the http status code"),
+                    fieldWithPath("data").description("Return company update status"))));
 
     mockMvc
             .perform(get("/company"))
@@ -324,7 +322,7 @@ public class CompanyIt {
   }
 
   @Test
-  public void updateCompanyWithoutNameTest() throws Exception{
+  public void updateNonExistentCompanyFailureTest() throws Exception{
     mockMvc
             .perform(
                     post("/company")
@@ -339,20 +337,12 @@ public class CompanyIt {
 
     mockMvc
             .perform(
-                    put("/company")
+                    post("/company/{companyName}", "NonExistentCompany")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatedCompanyDto)))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
-            .andExpect(jsonPath("$.data").value("Company name is mandatory for updating company details!"));
-
-    mockMvc
-            .perform(get("/company"))
-            .andExpect(jsonPath("$.data[0].name").value("Company1"))
-            .andExpect(jsonPath("$.data[0].address").value(address1))
-            .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
-            .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
-            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
+            .andExpect(jsonPath("$.data").value("Company does not exist!"));
 
   }
 

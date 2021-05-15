@@ -62,6 +62,8 @@ public class CompanyService {
                 companyEntity.setContactPhoneNumber(companyDto.getContactPhoneNumber());
             companyRepository.save(companyEntity);
             statusCode = StatusCode.SUCCESS;
+        }else{
+            statusCode = StatusCode.NOTFOUND;
         }
 
         return statusCode;

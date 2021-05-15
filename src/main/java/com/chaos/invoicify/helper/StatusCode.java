@@ -4,7 +4,8 @@ public enum StatusCode {
   SUCCESS(1),
   DUPLICATE(2),
   NONAME(3),
-  OTHER(4);
+  OTHER(4),
+  NOTFOUND(5);
 
   private int status;
 

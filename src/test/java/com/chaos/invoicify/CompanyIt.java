@@ -322,7 +322,7 @@ public class CompanyIt {
   }
 
   @Test
-  public void updateCompanyWithoutNameTest() throws Exception{
+  public void updateNonExistentCompanyFailureTest() throws Exception{
     mockMvc
             .perform(
                     post("/company")
@@ -337,20 +337,12 @@ public class CompanyIt {
 
     mockMvc
             .perform(
-                    put("/company")
+                    post("/company/{companyName}", "NonExistentCompany")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatedCompanyDto)))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
-            .andExpect(jsonPath("$.data").value("Company name is mandatory for updating company details!"));
-
-    mockMvc
-            .perform(get("/company"))
-            .andExpect(jsonPath("$.data[0].name").value("Company1"))
-            .andExpect(jsonPath("$.data[0].address").value(address1))
-            .andExpect(jsonPath("$.data[0].contactName").value("Samik"))
-            .andExpect(jsonPath("$.data[0].contactTitle").value("Account Payable"))
-            .andExpect(jsonPath("$.data[0].contactPhoneNumber").value("467-790-0128"));
+            .andExpect(jsonPath("$.data").value("Company does not exist!"));
 
   }
 

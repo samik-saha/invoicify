@@ -54,21 +54,18 @@ public class CompanyController {
     @PostMapping("/company/{companyName}")
     @ResponseStatus(HttpStatus.OK)
     public Response updateCompany(@PathVariable String companyName, @RequestBody CompanyDto companyDto){
-        Response response = null;
-        StatusCode statusCode=null;
+        Response response;
 
-        if(companyName != null){
-            statusCode = companyService.updateCompany(companyName, companyDto);
+        StatusCode statusCode = companyService.updateCompany(companyName, companyDto);
+        if(statusCode == StatusCode.NOTFOUND){
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Company does not exist!");
         }
         else{
-            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                "Company name is mandatory for updating company details!");
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                    "Company updated successfully!");
         }
 
-        if (statusCode == StatusCode.SUCCESS){
-            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
-                "Company updated successfully!");
-        }
         return response;
     }
 

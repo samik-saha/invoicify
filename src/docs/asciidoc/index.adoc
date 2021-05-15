@@ -61,8 +61,8 @@ include::{snippets}/Company-List/response-fields.adoc[]
 
 .request
 include::{snippets}/Update-Company/http-request.adoc[]
-.Request Parameters
-include::{snippets}/Update-Company/request-parameters.adoc[]
+
+include::{snippets}/Update-Company/path-parameters.adoc[]
 .Request Fields
 include::{snippets}/Update-Company/request-fields.adoc[]
 

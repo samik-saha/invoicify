@@ -51,19 +51,16 @@ public class CompanyController {
         return new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), companyDtoList);
     }
 
-    @PutMapping("/company")
+    @PostMapping("/company/{companyName}")
     @ResponseStatus(HttpStatus.OK)
-    public Object updateCompany(@RequestParam(required = false) String companyName, @RequestBody CompanyDto companyDto){
+    public Response updateCompany(@PathVariable String companyName, @RequestBody CompanyDto companyDto){
         Response response = null;
         StatusCode statusCode=null;
 
-
-        if (companyName == null&& companyDto.getName()!=null) {
-            statusCode = companyService.updateCompany(companyDto.getName(),companyDto);
-        }
-        else if(companyName!=null){
+        if(companyName != null){
             statusCode = companyService.updateCompany(companyName, companyDto);
-        }else{
+        }
+        else{
             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
                 "Company name is mandatory for updating company details!");
         }
@@ -74,6 +71,7 @@ public class CompanyController {
         }
         return response;
     }
+
 
     @GetMapping("company-list")
     @ResponseStatus(HttpStatus.OK)

@@ -21,7 +21,6 @@ public class InvoicesController {
     public Object addInvoices(@RequestBody InvoiceDto invoiceDto) {
 
         InvoiceDto responseInvoiceDto = this.invoiceService.addInvoices(invoiceDto);
-
         Response response = null;
         if (responseInvoiceDto == null) {
             response =

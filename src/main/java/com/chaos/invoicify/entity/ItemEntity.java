@@ -21,6 +21,7 @@ public class ItemEntity {
     String itemDescription;
     int itemCount;
     FeeType itemFeeType;
+
     @Column(columnDefinition = "DECIMAL(15,2)")
     double itemUnitPrice;
 
@@ -28,7 +29,11 @@ public class ItemEntity {
     @JoinColumn(name = "invoice_id")
     private InvoiceEntity invoice;
 
-    public ItemEntity(String itemDescription, int itemCount, FeeType itemFeeType, double itemUnitPrice, InvoiceEntity invoice) {
+    public double getTotalItemValue() {
+        return this.itemCount * this.itemUnitPrice;
+    }
+
+    public ItemEntity(String itemDescription, int itemCount, FeeType itemFeeType, double itemUnitPrice,  InvoiceEntity invoice) {
         this.itemDescription = itemDescription;
         this.itemCount = itemCount;
         this.itemFeeType = itemFeeType;

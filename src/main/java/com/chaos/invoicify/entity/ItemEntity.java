@@ -24,8 +24,8 @@ public class ItemEntity {
     @Column(columnDefinition = "DECIMAL(15,2)")
     double itemUnitPrice;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "invoice_id")
     private InvoiceEntity invoice;
 
     public ItemEntity(String itemDescription, int itemCount, FeeType itemFeeType, double itemUnitPrice, InvoiceEntity invoice) {

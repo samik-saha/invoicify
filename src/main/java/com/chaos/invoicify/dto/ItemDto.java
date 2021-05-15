@@ -13,4 +13,7 @@ public class ItemDto {
     int itemCount;
     FeeType itemFeeType;
     Double itemUnitPrice;
+    Double totalItemValue;
+
+
 }

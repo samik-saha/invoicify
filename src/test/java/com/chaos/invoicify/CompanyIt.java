@@ -347,6 +347,41 @@ public class CompanyIt {
   }
 
   @Test
+  public void updateCompanyAddressTest() throws Exception{
+    mockMvc
+            .perform(
+                    post("/company")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(companyDto)))
+            .andExpect(jsonPath("$.status").value("Created"))
+            .andExpect(jsonPath("$.status_code").value(201))
+            .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+    CompanyDto updatedCompanyDto = new CompanyDto();
+    Address updatedAddress = new Address();
+    updatedAddress.setState("Ontario");// Changed from "ON" to "Ontario"
+    updatedCompanyDto.setAddress(updatedAddress);
+
+    mockMvc
+            .perform(
+                    post("/company/{companyName}", "Company1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+            .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+            .andExpect(jsonPath("$.data").value("Company updated successfully!"));
+
+    mockMvc
+            .perform(get("/company"))
+            .andExpect(jsonPath("$.data[0].name").value("Company1"))
+            .andExpect(jsonPath("$.data[0].address.state").value("Ontario"))
+            .andExpect(jsonPath("$.data[0].address.city").value("Toronto"))
+            .andExpect(jsonPath("$.data[0].address.country").value("Canada"))
+            .andExpect(jsonPath("$.data[0].address.zipCode").value("A1B 2D3"));
+
+  }
+
+  @Test
   public void getSimpleCompanyListTest() throws Exception{
     mockMvc
             .perform(

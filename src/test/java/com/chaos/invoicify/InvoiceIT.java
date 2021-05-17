@@ -25,8 +25,7 @@ import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -98,14 +97,14 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].companyName").value("Company1"))
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
-                .andExpect(jsonPath("[0].itemDtoList").isEmpty())
+                .andExpect(jsonPath("[0].items").isEmpty())
                 .andExpect(jsonPath("[0].totalInvoiceValue").value(0.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
                         , fieldWithPath("[0].createDate").description("Invoice Creation Date")
                         , fieldWithPath("[0].modifiedDate").description("Invoice Last Modified Date")
-                        , fieldWithPath("[0].itemDtoList").description("List of Items")
+                        , fieldWithPath("[0].items").description("List of Items")
                         , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
@@ -114,9 +113,9 @@ public class InvoiceIT {
     public void AddInvoiceWithOneItems() throws Exception {
 
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo);
+        List<ItemDto> items = Arrays.asList(itemDTo);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -125,7 +124,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
                 .andDo(document("AddInvoices"));
     }
 
@@ -133,9 +132,9 @@ public class InvoiceIT {
     @Test
     public void getInvoiceWithOneItem() throws Exception {
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo);
+        List<ItemDto> items = Arrays.asList(itemDTo);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -144,7 +143,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
         ;
 
         mockMvc.perform(get("/invoices"))
@@ -154,20 +153,20 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].companyName").value("Company1"))
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
-                .andExpect(jsonPath("[0].itemDtoList.length()").value(1))
-                .andExpect(jsonPath("[0].itemDtoList[0].totalItemValue").value(201.00))
+                .andExpect(jsonPath("[0].items.length()").value(1))
+                .andExpect(jsonPath("[0].items[0].totalItemValue").value(201.00))
                 .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
                         , fieldWithPath("[0].createDate").description("Invoice Creation Date")
                         , fieldWithPath("[0].modifiedDate").description("Invoice Last Modified Date")
-                        , fieldWithPath("[0].itemDtoList").description("List of Items")
-                        , fieldWithPath("[0].itemDtoList[0].itemDescription").description("Item Description")
-                        , fieldWithPath("[0].itemDtoList[0].itemCount").description("Items Count")
-                        , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
-                        , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
-                        , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].items").description("List of Items")
+                        , fieldWithPath("[0].items[0].itemDescription").description("Item Description")
+                        , fieldWithPath("[0].items[0].itemCount").description("Items Count")
+                        , fieldWithPath("[0].items[0].itemFeeType").description("Fee Type")
+                        , fieldWithPath("[0].items[0].itemUnitPrice").description("Unit Price")
+                        , fieldWithPath("[0].items[0].totalItemValue").description("Total Item Value")
                         , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
@@ -179,9 +178,9 @@ public class InvoiceIT {
         ItemDto itemDTo2 = new ItemDto("Item2", 1, FeeType.FLATFEES, 250.0, null);
         ItemDto itemDTo3 = new ItemDto("Item3", 10, FeeType.RATEBASED, 30.10, null);
 
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
+        List<ItemDto> items = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -190,7 +189,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
                 .andDo(document("AddInvoices"));
     }
 
@@ -200,9 +199,9 @@ public class InvoiceIT {
         ItemDto itemDTo2 = new ItemDto("Item2", 1, FeeType.FLATFEES, 250.0, null);
         ItemDto itemDTo3 = new ItemDto("Item3", 10, FeeType.RATEBASED, 30.10, null);
 
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
+        List<ItemDto> items = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -211,7 +210,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
         ;
 
         mockMvc.perform(get("/invoices"))
@@ -221,24 +220,24 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].companyName").value("Company1"))
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
-                .andExpect(jsonPath("[0].itemDtoList.length()").value(3))
-                .andExpect(jsonPath("[0].itemDtoList[0].itemDescription").value("Item1"))
-                .andExpect(jsonPath("[0].itemDtoList[0].itemCount").value(10))
-                .andExpect(jsonPath("[0].itemDtoList[0].itemFeeType").value(FeeType.RATEBASED.name()))
-                .andExpect(jsonPath("[0].itemDtoList[0].itemUnitPrice").value(20.10))
-                .andExpect(jsonPath("[0].itemDtoList[0].totalItemValue").value(201.00))
+                .andExpect(jsonPath("[0].items.length()").value(3))
+                .andExpect(jsonPath("[0].items[0].itemDescription").value("Item1"))
+                .andExpect(jsonPath("[0].items[0].itemCount").value(10))
+                .andExpect(jsonPath("[0].items[0].itemFeeType").value(FeeType.RATEBASED.name()))
+                .andExpect(jsonPath("[0].items[0].itemUnitPrice").value(20.10))
+                .andExpect(jsonPath("[0].items[0].totalItemValue").value(201.00))
                 .andExpect(jsonPath("[0].totalInvoiceValue").value(752.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
                         , fieldWithPath("[0].createDate").description("Invoice Creation Date")
                         , fieldWithPath("[0].modifiedDate").description("Invoice Last Modified Date")
-                        , fieldWithPath("[0].itemDtoList").description("List of Items")
-                        , fieldWithPath("[0].itemDtoList[0].itemDescription").description("Item Description")
-                        , fieldWithPath("[0].itemDtoList[0].itemCount").description("Items Count")
-                        , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
-                        , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
-                        , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].items").description("List of Items")
+                        , fieldWithPath("[0].items[0].itemDescription").description("Item Description")
+                        , fieldWithPath("[0].items[0].itemCount").description("Items Count")
+                        , fieldWithPath("[0].items[0].itemFeeType").description("Fee Type")
+                        , fieldWithPath("[0].items[0].itemUnitPrice").description("Unit Price")
+                        , fieldWithPath("[0].items[0].totalItemValue").description("Total Item Value")
                         , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
@@ -246,9 +245,9 @@ public class InvoiceIT {
     @Test
     public void searchInvoiceById() throws Exception {
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo);
+        List<ItemDto> items = Arrays.asList(itemDTo);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         MvcResult mvcResult = mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -257,7 +256,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
                 .andReturn();
 
         Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
@@ -269,19 +268,19 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].companyName").value("Company1"))
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
-                .andExpect(jsonPath("[0].itemDtoList.length()").value(1))
+                .andExpect(jsonPath("[0].items.length()").value(1))
                 .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
-                .andDo(document("GetInvoices", responseFields(
+                .andDo(document("SearchInvoiceById", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
                         , fieldWithPath("[0].createDate").description("Invoice Creation Date")
                         , fieldWithPath("[0].modifiedDate").description("Invoice Last Modified Date")
-                        , fieldWithPath("[0].itemDtoList").description("List of Items")
-                        , fieldWithPath("[0].itemDtoList[0].itemDescription").description("Item Description")
-                        , fieldWithPath("[0].itemDtoList[0].itemCount").description("Items Count")
-                        , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
-                        , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
-                        , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].items").description("List of Items")
+                        , fieldWithPath("[0].items[0].itemDescription").description("Item Description")
+                        , fieldWithPath("[0].items[0].itemCount").description("Items Count")
+                        , fieldWithPath("[0].items[0].itemFeeType").description("Fee Type")
+                        , fieldWithPath("[0].items[0].itemUnitPrice").description("Unit Price")
+                        , fieldWithPath("[0].items[0].totalItemValue").description("Total Item Value")
                         , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
 
@@ -290,9 +289,9 @@ public class InvoiceIT {
     @Test
     public void addItemsToInvoice() throws Exception {
         ItemDto itemDTo = new ItemDto("Item", 10, FeeType.RATEBASED, 50.10, null);
-        List<ItemDto> itemDtoList = Arrays.asList(itemDTo);
+        List<ItemDto> items = Arrays.asList(itemDTo);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", itemDtoList);
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
 
         MvcResult mvcResult = mockMvc.perform(post("/invoices")
                 .content(objectMapper.writeValueAsString(invoiceDto))
@@ -301,7 +300,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
                 .andReturn();
 
         Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
@@ -310,16 +309,46 @@ public class InvoiceIT {
         ItemDto itemDTo2 = new ItemDto("Item2", 1, FeeType.FLATFEES, 250.0, null);
         ItemDto itemDTo3 = new ItemDto("Item3", 10, FeeType.RATEBASED, 30.10, null);
 
-        List<ItemDto> itemDtoListNew = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
+        List<ItemDto> itemsNew = Arrays.asList(itemDTo1, itemDTo2, itemDTo3);
 
         mockMvc.perform(post("/invoices/{id}/items", id)
-                .content(objectMapper.writeValueAsString(itemDtoListNew))
+                .content(objectMapper.writeValueAsString(itemsNew))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.itemDtoList").isNotEmpty())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
                 .andDo(document("AddItems"));
+    }
+
+    @Test
+    public void deleteInvoiceById() throws Exception {
+        ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
+        List<ItemDto> items = Arrays.asList(itemDTo);
+
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
+
+        MvcResult mvcResult = mockMvc.perform(post("/invoices")
+            .content(objectMapper.writeValueAsString(invoiceDto))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
+            .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
+            .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
+            .andExpect(jsonPath("$.data.items").isNotEmpty())
+            .andReturn();
+
+        Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
+
+        mockMvc.perform(delete("/invoices/{id}", id))
+            .andExpect(status().isOk())
+            .andDo(document("DeleteInvoice"));
+
+
+        mockMvc.perform(get("/invoices/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("length()").value(0));
+
     }
 
 }

@@ -27,6 +27,22 @@ include::{snippets}/AddItems/http-request.adoc[]
 .response
 include::{snippets}/AddItems/http-response.adoc[]
 
+==== Search By Invoice ID
+
+.request
+include::{snippets}/searchinvoicebyid/http-request.adoc[]
+
+.response
+include::{snippets}/searchinvoicebyid/http-response.adoc[]
+
+==== Delete By Invoice ID
+
+.request
+include::{snippets}/Delete Invoice/http-request.adoc[]
+
+.response
+include::{snippets}/Delete Invoice/http-response.adoc[]
+
 === Companies
 ==== Add Company
 

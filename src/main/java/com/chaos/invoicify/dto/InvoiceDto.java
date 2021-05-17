@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,15 +16,15 @@ public class InvoiceDto {
     LocalDate createDate;
     LocalDate modifiedDate;
     double totalInvoiceValue;
-    List<ItemDto> itemDtoList;
+    List<ItemDto> items;
 
 
     public InvoiceDto(String companyName) {
         this.companyName = companyName;
     }
 
-    public InvoiceDto(String companyName, List<ItemDto> itemDtoList) {
+    public InvoiceDto(String companyName, List<ItemDto> items) {
         this.companyName = companyName;
-        this.itemDtoList = itemDtoList;
+        this.items = items;
     }
 }

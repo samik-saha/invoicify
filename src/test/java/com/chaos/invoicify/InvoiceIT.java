@@ -99,12 +99,14 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
                 .andExpect(jsonPath("[0].itemDtoList").isEmpty())
+                .andExpect(jsonPath("[0].totalInvoiceValue").value(0.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
                         , fieldWithPath("[0].createDate").description("Invoice Creation Date")
                         , fieldWithPath("[0].modifiedDate").description("Invoice Last Modified Date")
                         , fieldWithPath("[0].itemDtoList").description("List of Items")
+                        , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
 
@@ -154,6 +156,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
                 .andExpect(jsonPath("[0].itemDtoList.length()").value(1))
                 .andExpect(jsonPath("[0].itemDtoList[0].totalItemValue").value(201.00))
+                .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
@@ -165,6 +168,7 @@ public class InvoiceIT {
                         , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
                         , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
                         , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
 
@@ -223,6 +227,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].itemDtoList[0].itemFeeType").value(FeeType.RATEBASED.name()))
                 .andExpect(jsonPath("[0].itemDtoList[0].itemUnitPrice").value(20.10))
                 .andExpect(jsonPath("[0].itemDtoList[0].totalItemValue").value(201.00))
+                .andExpect(jsonPath("[0].totalInvoiceValue").value(752.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
@@ -234,6 +239,7 @@ public class InvoiceIT {
                         , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
                         , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
                         , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
     }
 
@@ -264,6 +270,7 @@ public class InvoiceIT {
                 .andExpect(jsonPath("[0].createDate").isNotEmpty())
                 .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
                 .andExpect(jsonPath("[0].itemDtoList.length()").value(1))
+                .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
                 .andDo(document("GetInvoices", responseFields(
                         fieldWithPath("[0].invoiceNumber").description("Invoice Number")
                         , fieldWithPath("[0].companyName").description("Company Name")
@@ -275,6 +282,7 @@ public class InvoiceIT {
                         , fieldWithPath("[0].itemDtoList[0].itemFeeType").description("Fee Type")
                         , fieldWithPath("[0].itemDtoList[0].itemUnitPrice").description("Unit Price")
                         , fieldWithPath("[0].itemDtoList[0].totalItemValue").description("Total Item Value")
+                        , fieldWithPath("[0].totalInvoiceValue").description("Total Invoice Value")
                 )));
 
     }

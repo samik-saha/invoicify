@@ -47,5 +47,28 @@ public class InvoiceEntity {
         this.modifiedDate = LocalDate.now();
         this.items = new ArrayList<>();
     }
+    //public double totalInvoiceValue() {
+        //this.items.forEach(
+        //item =
+        //Integer sum = items.stream()
+        //  .map(x -> x.getPrice())
+        //  .reduce(0, Integer::sum);
+
+            /*Integer sum = items.stream()
+                    .map(reqValue -> reqValue.getTotalItemValue() )
+                    .reduce (0,ArithmeticUtils::add);*/
+
+        //double total = numbers.stream().mapToInt(i -> i.intValue()).sum();
+    //}
+    public double getTotalValue () {
+
+        Double sum = this.items.stream()
+                .map(x -> x.getTotalItemValue())
+                .reduce(0.0, Double::sum);
+        double totalValue = sum;
+        return totalValue;
+    }
+
+
 
 }

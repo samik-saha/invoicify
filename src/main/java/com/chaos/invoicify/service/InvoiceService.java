@@ -49,6 +49,7 @@ public class InvoiceService {
                     invoiceEntity.getCompany().getName(),
                     invoiceEntity.getCreateDate(),
                     invoiceEntity.getModifiedDate(),
+                    invoiceEntity.getTotalValue(),
                     invoiceEntity.getItems().stream()
                             .map(
                                     itemEntity -> new ItemDto(
@@ -72,6 +73,7 @@ public class InvoiceService {
                                 invoiceEntity.getCompany().getName(),
                                 invoiceEntity.getCreateDate(),
                                 invoiceEntity.getModifiedDate(),
+                                invoiceEntity.getTotalValue(),
                                 invoiceEntity.getItems().stream()
                                         .map(itemEntity -> new ItemDto(
                                                 itemEntity.getItemDescription(),
@@ -104,6 +106,7 @@ public class InvoiceService {
                     invoiceEntity.getCompany().getName(),
                     invoiceEntity.getCreateDate(),
                     invoiceEntity.getModifiedDate(),
+                    invoiceEntity.getTotalValue(),
                     invoiceEntity.getItems().stream()
                             .map(itemEntity -> new ItemDto(
                                     itemEntity.getItemDescription(),
@@ -123,6 +126,7 @@ public class InvoiceService {
                         invoiceEntity.getCompany().getName(),
                         invoiceEntity.getCreateDate(),
                         invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
                         invoiceEntity.getItems().stream()
                                 .map(itemEntity -> new ItemDto(
                                         itemEntity.getItemDescription(),

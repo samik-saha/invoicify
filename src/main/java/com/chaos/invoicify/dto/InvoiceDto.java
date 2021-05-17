@@ -16,8 +16,9 @@ public class InvoiceDto {
     String companyName;
     LocalDate createDate;
     LocalDate modifiedDate;
-
+    double totalInvoiceValue;
     List<ItemDto> itemDtoList;
+
 
     public InvoiceDto(String companyName) {
         this.companyName = companyName;

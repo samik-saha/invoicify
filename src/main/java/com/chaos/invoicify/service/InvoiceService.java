@@ -137,7 +137,6 @@ public class InvoiceService {
                 )).collect(Collectors.toList());
     }
 
-
     public void deleteInvoiceById(Long invoiceNumber) {
         invoicesRepository.deleteById(invoiceNumber);
     }

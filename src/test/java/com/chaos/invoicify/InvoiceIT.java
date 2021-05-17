@@ -41,7 +41,7 @@ public class InvoiceIT {
     ObjectMapper objectMapper;
 
     Address address1, address2;
-    private CompanyDto companyDto, companyDto2;
+    private CompanyDto companyDto;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -49,8 +49,6 @@ public class InvoiceIT {
         address2 = new Address("456 ABC Street", "Cary", "NC", "US", "12345");
         companyDto =
                 new CompanyDto("Company1", address1, "Samik", "Account Payable", "467-790-0128");
-        companyDto2 =
-                new CompanyDto("Company2", address2, "Rajendra", "Account Payable", "123-456-7890");
 
         mockMvc
                 .perform(

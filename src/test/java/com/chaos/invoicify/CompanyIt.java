@@ -263,7 +263,6 @@ public class CompanyIt {
                                     fieldWithPath("status").description("Return the http status description"),
                                     fieldWithPath("status_code").description("Return the http status code"),
                                     fieldWithPath("data").description("Return company update status"))));
-    ;
 
     mockMvc
             .perform(get("/company"))
@@ -376,6 +375,22 @@ public class CompanyIt {
             .andExpect(jsonPath("$.data[0].name").value("Company1"))
             .andExpect(jsonPath("$.data[0].address.state").value("Ontario"))
             .andExpect(jsonPath("$.data[0].address.city").value("Toronto"))
+            .andExpect(jsonPath("$.data[0].address.country").value("Canada"))
+            .andExpect(jsonPath("$.data[0].address.zipCode").value("A1B 2D3"));
+
+    updatedAddress.setCity("NewCity");
+    updatedAddress.setState(null);
+    updatedCompanyDto.setAddress(updatedAddress);
+    mockMvc
+            .perform(
+                    post("/company/{companyName}", "Company1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatedCompanyDto)));
+    mockMvc
+            .perform(get("/company"))
+            .andExpect(jsonPath("$.data[0].name").value("Company1"))
+            .andExpect(jsonPath("$.data[0].address.state").value("Ontario"))
+            .andExpect(jsonPath("$.data[0].address.city").value("NewCity"))
             .andExpect(jsonPath("$.data[0].address.country").value("Canada"))
             .andExpect(jsonPath("$.data[0].address.zipCode").value("A1B 2D3"));
 

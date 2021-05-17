@@ -38,8 +38,10 @@ public class CompanyServiceTest {
         new CompanyDto("Comapany1", address1, "Samik", "Account Payable", "467-790-0128");
     companyDto2 =
         new CompanyDto("Comapany1", address2, "Samik", "Account Payable", "467-790-0128");
+
     companyEntity =
         new CompanyEntity("Comapany1", address1, "Samik", "Account Payable", "467-790-0128");
+
   }
 
   @Test
@@ -60,6 +62,25 @@ public class CompanyServiceTest {
     when(companyRepository.findByName("Comapany1")).thenReturn(companyEntity);
     StatusCode s = companyService.createCompany(companyDto2);
     assertThat(s).isEqualTo(StatusCode.DUPLICATE);
+  }
+
+  @Test
+  public void updateCompanyTest(){
+    when(companyRepository.findByName("Company1")).thenReturn(companyEntity);
+
+    CompanyDto updatedCompanyDto = new CompanyDto();
+    updatedCompanyDto.setName("Company2");
+    updatedCompanyDto.setAddress(address2);
+    updatedCompanyDto.setContactName("ABCD");
+    updatedCompanyDto.setContactTitle("XYZ");
+    updatedCompanyDto.setContactPhoneNumber("999-999-9999");
+
+    CompanyEntity updatedCompanyEntity =
+            new CompanyEntity("Company2", address2, "ABCD", "XYZ", "999-999-9999");
+
+    companyService.updateCompany("Company1", updatedCompanyDto);
+
+    verify(companyRepository).save(updatedCompanyEntity);
   }
 
 }

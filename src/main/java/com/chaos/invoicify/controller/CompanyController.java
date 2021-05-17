@@ -37,7 +37,6 @@ public class CompanyController {
             case NONAME:
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
                     "Company name cannot be empty!");
-                break;
         }
 
         return response;

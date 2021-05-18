@@ -41,8 +41,10 @@ public class InvoicesController {
     }
 
     @GetMapping
-    public List<InvoiceDto> getAllInvoices() {
-        return invoiceService.fetchAllInvoices();
+    public List<InvoiceDto> getAllInvoices(@RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "10") int pageSize,
+                                           @RequestParam(defaultValue = "id") String sortBy) {
+        return invoiceService.fetchAllInvoices(page, pageSize, sortBy);
     }
 
     @GetMapping("{invoiceNumber}")

@@ -9,10 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -20,11 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -348,5 +355,61 @@ public class InvoiceIT {
             .andExpect(jsonPath("length()").value(0));
 
     }
+
+    @Test
+    public void getAllInvoicesWithPaginationTest() throws Exception{
+        ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
+        List<ItemDto> items = Arrays.asList(itemDTo);
+
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
+
+        List<Integer> invoiceIds = new ArrayList<>();
+
+        for (int i=0; i<15; i++){
+            MvcResult mvcResult = mockMvc.perform(post("/invoices")
+                    .content(objectMapper.writeValueAsString(invoiceDto))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated())
+                    .andReturn();
+
+            invoiceIds.add(JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber"));
+        }
+
+        mockMvc.perform(get("/invoices"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(10))
+                .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(0)))
+                .andExpect(jsonPath("$[9].invoiceNumber").value(invoiceIds.get(9)));
+
+        mockMvc.perform(get("/invoices").queryParam("page", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(10))
+                .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(0)))
+                .andExpect(jsonPath("$[9].invoiceNumber").value(invoiceIds.get(9)));;
+
+        mockMvc.perform(get("/invoices").queryParam("page", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(5))
+                .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(10)))
+                .andExpect(jsonPath("$[4].invoiceNumber").value(invoiceIds.get(14)));;
+
+        mockMvc.perform(get("/invoices")
+                    .queryParam("page", "1")
+                    .queryParam("pageSize", "8")
+                    .queryParam("sortBy", "id"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(8))
+                .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(0)))
+                .andExpect(jsonPath("$[7].invoiceNumber").value(invoiceIds.get(7)))
+                .andDo(document("Paginated-Invoices",
+                        requestParameters(
+                                parameterWithName("page").description("Page Number"),
+                                parameterWithName("pageSize").description("Page Size"),
+                                parameterWithName("sortBy").description("Sort By Column"))));
+
+    }
+
+
+
 
 }

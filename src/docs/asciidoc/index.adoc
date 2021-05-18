@@ -11,6 +11,15 @@ include::{snippets}/GetInvoices/http-request.adoc[]
 .response
 include::{snippets}/GetInvoices/http-response.adoc[]
 
+==== Get Invoices by Page
+
+.request
+include::{snippets}/Paginated-Invoices/http-request.adoc[]
+include::{snippets}/Paginated-Invoices/request-parameters.adoc[]
+
+.response
+include::{snippets}/Paginated-Invoices/http-response.adoc[]
+
 ==== Add Invoices
 
 .request

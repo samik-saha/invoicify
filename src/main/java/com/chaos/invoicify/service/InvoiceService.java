@@ -9,6 +9,9 @@ import com.chaos.invoicify.repository.ItemRepository;
 import com.chaos.invoicify.dto.InvoiceDto;
 import com.chaos.invoicify.entity.InvoiceEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,8 +67,10 @@ public class InvoiceService {
         return newInvoiceDto;
     }
 
-    public List<InvoiceDto> fetchAllInvoices() {
-        return invoicesRepository.findAll()
+    public List<InvoiceDto> fetchAllInvoices(int page, int pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(page - 1, pageSize, Sort.by(sortBy));
+
+        return invoicesRepository.findAll(paging)
                 .stream()
                 .map(
                         invoiceEntity -> new InvoiceDto(

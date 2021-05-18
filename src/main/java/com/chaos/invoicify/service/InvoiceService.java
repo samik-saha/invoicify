@@ -31,10 +31,10 @@ public class InvoiceService {
         if (companyEntity != null) {
             InvoiceEntity invoiceEntity = new InvoiceEntity(companyEntity);
 
-            if (invoiceDto.getItemDtoList() != null) {
+            if (invoiceDto.getItems() != null) {
 
                 invoiceEntity.setItems(
-                        invoiceDto.getItemDtoList().stream()
+                        invoiceDto.getItems().stream()
                                 .map(
                                         itemDto -> new ItemEntity(
                                                 itemDto.getItemDescription(),
@@ -49,6 +49,7 @@ public class InvoiceService {
                     invoiceEntity.getCompany().getName(),
                     invoiceEntity.getCreateDate(),
                     invoiceEntity.getModifiedDate(),
+                    invoiceEntity.getTotalValue(),
                     invoiceEntity.getItems().stream()
                             .map(
                                     itemEntity -> new ItemDto(
@@ -72,6 +73,7 @@ public class InvoiceService {
                                 invoiceEntity.getCompany().getName(),
                                 invoiceEntity.getCreateDate(),
                                 invoiceEntity.getModifiedDate(),
+                                invoiceEntity.getTotalValue(),
                                 invoiceEntity.getItems().stream()
                                         .map(itemEntity -> new ItemDto(
                                                 itemEntity.getItemDescription(),
@@ -104,6 +106,7 @@ public class InvoiceService {
                     invoiceEntity.getCompany().getName(),
                     invoiceEntity.getCreateDate(),
                     invoiceEntity.getModifiedDate(),
+                    invoiceEntity.getTotalValue(),
                     invoiceEntity.getItems().stream()
                             .map(itemEntity -> new ItemDto(
                                     itemEntity.getItemDescription(),
@@ -123,6 +126,7 @@ public class InvoiceService {
                         invoiceEntity.getCompany().getName(),
                         invoiceEntity.getCreateDate(),
                         invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
                         invoiceEntity.getItems().stream()
                                 .map(itemEntity -> new ItemDto(
                                         itemEntity.getItemDescription(),
@@ -133,5 +137,7 @@ public class InvoiceService {
                 )).collect(Collectors.toList());
     }
 
-
+    public void deleteInvoiceById(Long invoiceNumber) {
+        invoicesRepository.deleteById(invoiceNumber);
+    }
 }

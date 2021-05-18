@@ -14,20 +14,21 @@ import java.util.List;
 @RequestMapping("invoices")
 public class InvoicesController {
 
-    @Autowired InvoiceService invoiceService;
+    @Autowired
+    InvoiceService invoiceService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Object addInvoices(@RequestBody InvoiceDto invoiceDto) {
 
         InvoiceDto responseInvoiceDto = this.invoiceService.addInvoices(invoiceDto);
-        Response response = null;
+        Response response;
         if (responseInvoiceDto == null) {
             response =
                 new Response(
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     HttpStatus.BAD_REQUEST.value(),
-                "Invoice Creation Not Successful!");
+                    "Invoice Creation Not Successful!");
         } else {
             response =
                 new Response(
@@ -49,19 +50,24 @@ public class InvoicesController {
         return invoiceService.fetchInvoiceById(invoiceNumber);
     }
 
+    @DeleteMapping("{invoiceNumber}")
+    public void deleteInvoiceById(@PathVariable Long invoiceNumber) {
+        invoiceService.deleteInvoiceById(invoiceNumber);
+    }
+
     @PostMapping("{invoiceNumber}/items")
     @ResponseStatus(HttpStatus.CREATED)
     public Object addItems(
         @PathVariable Long invoiceNumber, @RequestBody List<ItemDto> itemDtoList) {
         InvoiceDto responseInvoiceDto = this.invoiceService.addItems(invoiceNumber, itemDtoList);
 
-        Response response = null;
+        Response response;
         if (responseInvoiceDto == null) {
             response =
                 new Response(
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     HttpStatus.BAD_REQUEST.value(),
-                "Item addition to Invoice Not Successful!");
+                    "Item addition to Invoice Not Successful!");
         } else {
             response = new Response(
                 HttpStatus.CREATED.getReasonPhrase(),

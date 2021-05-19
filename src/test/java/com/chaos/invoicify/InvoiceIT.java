@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -332,7 +333,7 @@ public class InvoiceIT {
     }
 
     @Test
-    public void deleteInvoiceById() throws Exception {
+    public void noInvoiceDeletionForCurrentYearById() throws Exception {
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
         List<ItemDto> items = Arrays.asList(itemDTo);
 
@@ -352,22 +353,47 @@ public class InvoiceIT {
 
         mockMvc.perform(delete("/invoices/{id}", id))
             .andExpect(status().isOk())
-            .andDo(document("DeleteInvoice"));
-
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+                .andDo(document("DeleteInvoice"));
 
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("length()").value(0));
-
+            .andExpect(jsonPath("length()").value(1));
     }
+    @Test
+    public void deleteInvoiceForYearOldById() throws Exception {
+        ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
+        List<ItemDto> items = Arrays.asList(itemDTo);
+
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", LocalDate.of(2020,01,01), items);
+
+        MvcResult mvcResult = mockMvc.perform(post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
+                .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
+                .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
+                .andReturn();
+
+        Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
+
+        mockMvc.perform(delete("/invoices/{id}", id))
+                .andExpect(status().isOk())
+                .andDo(document("DeleteInvoice"));
+
+        mockMvc.perform(get("/invoices/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(0));
+    }
+
 
     @Test
     public void getAllInvoicesWithPaginationTest() throws Exception {
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
         List<ItemDto> items = Arrays.asList(itemDTo);
-
         InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
-
         List<Integer> invoiceIds = new ArrayList<>();
 
         for (int i = 0; i < 15; i++) {
@@ -391,14 +417,12 @@ public class InvoiceIT {
             .andExpect(jsonPath("length()").value(10))
             .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(0)))
             .andExpect(jsonPath("$[9].invoiceNumber").value(invoiceIds.get(9)));
-        ;
 
         mockMvc.perform(get("/invoices").queryParam("page", "2"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("length()").value(5))
             .andExpect(jsonPath("$[0].invoiceNumber").value(invoiceIds.get(10)))
             .andExpect(jsonPath("$[4].invoiceNumber").value(invoiceIds.get(14)));
-        ;
 
         mockMvc.perform(get("/invoices")
             .queryParam("page", "1")

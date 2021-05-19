@@ -53,8 +53,9 @@ public class InvoicesController {
     }
 
     @DeleteMapping("{invoiceNumber}")
-    public void deleteInvoiceById(@PathVariable Long invoiceNumber) {
-        invoiceService.deleteInvoiceById(invoiceNumber);
+    public Object deleteInvoiceById(@PathVariable Long invoiceNumber) {
+        return invoiceService.deleteInvoiceById(invoiceNumber);
+
     }
 
     @PostMapping("{invoiceNumber}/items")

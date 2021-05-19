@@ -1,6 +1,7 @@
 package com.chaos.invoicify.service;
 
 import com.chaos.invoicify.dto.ItemDto;
+import com.chaos.invoicify.dto.Response;
 import com.chaos.invoicify.entity.CompanyEntity;
 import com.chaos.invoicify.entity.ItemEntity;
 import com.chaos.invoicify.repository.CompanyRepository;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,11 @@ public class InvoiceService {
                                 itemDto.getItemFeeType(),
                                 itemDto.getItemUnitPrice(),
                                 invoiceEntity)).collect(Collectors.toList()));
+            }
+            if (invoiceDto.getCreateDate() !=null){
+                invoiceEntity.setCreateDate(
+                        invoiceDto.getCreateDate()
+                );
             }
 
             invoicesRepository.save(invoiceEntity);
@@ -146,7 +154,22 @@ public class InvoiceService {
             )).collect(Collectors.toList());
     }
 
-    public void deleteInvoiceById(Long invoiceNumber) {
-        invoicesRepository.deleteById(invoiceNumber);
+    public Response deleteInvoiceById(Long invoiceNumber) {
+        InvoiceEntity invoiceEntity = invoicesRepository.findById(invoiceNumber).orElse(null);
+        LocalDate createdDate = invoiceEntity.getCreateDate();
+        LocalDate currentDate = LocalDate.now();
+        LocalDate yearBackDate = currentDate.minusYears(1);
+        System.out.println(yearBackDate);
+        Response response;
+         if (yearBackDate.isAfter(createdDate)){
+             invoicesRepository.deleteById(invoiceNumber);
+             response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                     "Invoice is Deleted");
+        }
+         else{
+             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                     "Invoice is NOT an year later so cannot be Deleted");
+         }
+         return response;
     }
 }

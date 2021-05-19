@@ -27,4 +27,10 @@ public class InvoiceDto {
         this.companyName = companyName;
         this.items = items;
     }
+
+    public InvoiceDto(String companyName, LocalDate createDate, List<ItemDto> items) {
+        this.companyName = companyName;
+        this.createDate = createDate;
+        this.items = items;
+    }
 }

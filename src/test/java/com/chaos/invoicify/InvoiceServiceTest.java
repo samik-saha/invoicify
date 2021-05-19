@@ -100,4 +100,28 @@ public class InvoiceServiceTest {
                 )
         ));
     }
+
+    @Test
+    public void searchInvoicesByIdTest(){
+        when(invoicesRepository.findById(invoiceEntity.getId())).thenReturn(java.util.Optional.ofNullable(invoiceEntity));
+
+        List<InvoiceDto> invoiceDtoList = invoiceService.fetchInvoiceById(invoiceEntity.getId());
+
+        assertThat(invoiceDtoList).isEqualTo(List.of(
+                new InvoiceDto(
+                        invoiceEntity.getId(),
+                        invoiceEntity.getCompany().getName(),
+                        invoiceEntity.getCreateDate(),
+                        invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
+                        invoiceEntity.getItems().stream()
+                                .map(itemEntity -> new ItemDto(
+                                        itemEntity.getItemDescription(),
+                                        itemEntity.getItemCount(),
+                                        itemEntity.getItemFeeType(),
+                                        itemEntity.getItemUnitPrice(),
+                                        itemEntity.getTotalItemValue())).collect(Collectors.toList())
+                )
+        ));
+    }
 }

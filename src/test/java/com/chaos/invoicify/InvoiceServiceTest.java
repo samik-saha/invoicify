@@ -2,6 +2,7 @@ package com.chaos.invoicify;
 
 import com.chaos.invoicify.dto.CompanyDto;
 import com.chaos.invoicify.dto.InvoiceDto;
+import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.entity.CompanyEntity;
 import com.chaos.invoicify.entity.InvoiceEntity;
 import com.chaos.invoicify.helper.Address;
@@ -15,13 +16,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -41,7 +44,8 @@ public class InvoiceServiceTest {
     @InjectMocks
     CompanyService companyService;
 
-
+    @Mock
+    private Pageable pageableMock;
 
     InvoiceEntity invoiceEntity;
     CompanyEntity companyEntity;
@@ -70,4 +74,30 @@ public class InvoiceServiceTest {
         verify(invoicesRepository).save(invoiceEntity);
     }
 
+    @Test
+    public void fetchInvoicesTest(){
+        Pageable paging = PageRequest.of(0, 10, Sort.by("id"));
+        List<InvoiceEntity> invoiceEntities = List.of(invoiceEntity);
+        Page<InvoiceEntity> pagedResponse = new PageImpl(invoiceEntities);
+        when(invoicesRepository.findAll(paging)).thenReturn(pagedResponse);
+
+        List<InvoiceDto> invoiceDtoList = invoiceService.fetchAllInvoices(1,10,"id");
+
+        assertThat(invoiceDtoList).isEqualTo(List.of(
+                new InvoiceDto(
+                        invoiceEntity.getId(),
+                        invoiceEntity.getCompany().getName(),
+                        invoiceEntity.getCreateDate(),
+                        invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
+                        invoiceEntity.getItems().stream()
+                                .map(itemEntity -> new ItemDto(
+                                        itemEntity.getItemDescription(),
+                                        itemEntity.getItemCount(),
+                                        itemEntity.getItemFeeType(),
+                                        itemEntity.getItemUnitPrice(),
+                                        itemEntity.getTotalItemValue())).collect(Collectors.toList())
+                )
+        ));
+    }
 }

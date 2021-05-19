@@ -361,7 +361,7 @@ public class InvoiceIT {
             .andExpect(jsonPath("length()").value(1));
     }
     @Test
-    public void deleteInvoiceForYearOldById() throws Exception {
+    public void noUnPaidInvoiceDeleteForYearOldById() throws Exception {
         ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
         List<ItemDto> items = Arrays.asList(itemDTo);
 
@@ -381,11 +381,12 @@ public class InvoiceIT {
 
         mockMvc.perform(delete("/invoices/{id}", id))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andDo(document("DeleteInvoice"));
 
         mockMvc.perform(get("/invoices/{id}", id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("length()").value(0));
+                .andExpect(jsonPath("length()").value(1));
     }
 
 

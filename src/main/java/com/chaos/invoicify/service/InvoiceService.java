@@ -161,14 +161,14 @@ public class InvoiceService {
         LocalDate yearBackDate = currentDate.minusYears(1);
         System.out.println(yearBackDate);
         Response response;
-         if (yearBackDate.isAfter(createdDate)){
+         if (yearBackDate.isAfter(createdDate) && invoiceEntity.isPaid()){
              invoicesRepository.deleteById(invoiceNumber);
              response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
                      "Invoice is Deleted");
         }
          else{
              response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                     "Invoice is NOT an year later so cannot be Deleted");
+                     "Invoice is NOT an year later or Unpaid so cannot be Deleted");
          }
          return response;
     }

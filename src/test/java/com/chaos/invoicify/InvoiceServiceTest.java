@@ -124,4 +124,11 @@ public class InvoiceServiceTest {
                 )
         ));
     }
+
+    @Test
+    public void deleteInvoicesByIdTest(){
+
+        invoiceService.deleteInvoiceById(2L);
+        verify(invoicesRepository).deleteById(2L);
+    }
 }

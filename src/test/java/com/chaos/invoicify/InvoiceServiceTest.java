@@ -5,9 +5,12 @@ import com.chaos.invoicify.dto.InvoiceDto;
 import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.entity.CompanyEntity;
 import com.chaos.invoicify.entity.InvoiceEntity;
+import com.chaos.invoicify.entity.ItemEntity;
 import com.chaos.invoicify.helper.Address;
+import com.chaos.invoicify.helper.FeeType;
 import com.chaos.invoicify.repository.CompanyRepository;
 import com.chaos.invoicify.repository.InvoicesRepository;
+import com.chaos.invoicify.repository.ItemRepository;
 import com.chaos.invoicify.service.CompanyService;
 import com.chaos.invoicify.service.InvoiceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,12 +48,14 @@ public class InvoiceServiceTest {
     CompanyService companyService;
 
     @Mock
-    private Pageable pageableMock;
+    private ItemRepository itemRepository;
 
     InvoiceEntity invoiceEntity;
     CompanyEntity companyEntity;
     Address address1, address2;
     private CompanyDto companyDto, companyDto2;
+    ItemDto itemDto;
+    ItemEntity itemEntity;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -62,7 +67,13 @@ public class InvoiceServiceTest {
                 new CompanyEntity("Company1", address1, "Samik", "Account Payable", "467-790-0128");
         invoiceEntity =
                 new InvoiceEntity(companyEntity);
-
+        itemDto=new ItemDto("item1",2, FeeType.RATEBASED,100.0,null);
+        itemEntity=new ItemEntity(
+                itemDto.getItemDescription(),
+                itemDto.getItemCount(),
+                itemDto.getItemFeeType(),
+                itemDto.getItemUnitPrice(),
+                invoiceEntity);
     }
 
     @Test
@@ -130,5 +141,12 @@ public class InvoiceServiceTest {
 
         invoiceService.deleteInvoiceById(2L);
         verify(invoicesRepository).deleteById(2L);
+    }
+
+    @Test
+    public void addItemsTest(){
+        when(invoicesRepository.findById(invoiceEntity.getId())).thenReturn(java.util.Optional.ofNullable(invoiceEntity));
+        invoiceService.addItems(invoiceEntity.getId(),List.of(itemDto));
+        verify(itemRepository).save(itemEntity);
     }
 }

@@ -32,12 +32,14 @@ public class InvoiceEntity {
 
     LocalDate createDate;
     LocalDate modifiedDate;
+    boolean isPaid;
 
     public InvoiceEntity(CompanyEntity company) {
         this.company = company;
         this.createDate = LocalDate.now();
         this.modifiedDate = LocalDate.now();
         this.items = new ArrayList<>();
+        this.isPaid = false;
     }
 
     public double getTotalValue() {

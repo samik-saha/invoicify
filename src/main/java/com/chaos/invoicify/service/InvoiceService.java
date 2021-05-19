@@ -37,31 +37,32 @@ public class InvoiceService {
             if (invoiceDto.getItems() != null) {
 
                 invoiceEntity.setItems(
-                        invoiceDto.getItems().stream()
-                                .map(
-                                        itemDto -> new ItemEntity(
-                                                itemDto.getItemDescription(),
-                                                itemDto.getItemCount(),
-                                                itemDto.getItemFeeType(),
-                                                itemDto.getItemUnitPrice(),
-                                                invoiceEntity)).collect(Collectors.toList()));
+                    invoiceDto.getItems().stream()
+                        .map(
+                            itemDto -> new ItemEntity(
+                                itemDto.getItemDescription(),
+                                itemDto.getItemCount(),
+                                itemDto.getItemFeeType(),
+                                itemDto.getItemUnitPrice(),
+                                invoiceEntity)).collect(Collectors.toList()));
             }
 
             invoicesRepository.save(invoiceEntity);
             newInvoiceDto = new InvoiceDto(invoiceEntity.getId(),
-                    invoiceEntity.getCompany().getName(),
-                    invoiceEntity.getCreateDate(),
-                    invoiceEntity.getModifiedDate(),
-                    invoiceEntity.getTotalValue(),
-                    invoiceEntity.getItems().stream()
-                            .map(
-                                    itemEntity -> new ItemDto(
-                                            itemEntity.getItemDescription(),
-                                            itemEntity.getItemCount(),
-                                            itemEntity.getItemFeeType(),
-                                            itemEntity.getItemUnitPrice(),
-                                            itemEntity.getTotalItemValue()
-                                            )).collect(Collectors.toList()));
+                invoiceEntity.getCompany().getName(),
+                invoiceEntity.getCreateDate(),
+                invoiceEntity.getModifiedDate(),
+                invoiceEntity.getTotalValue(),
+                invoiceEntity.isPaid(),
+                invoiceEntity.getItems().stream()
+                    .map(
+                        itemEntity -> new ItemDto(
+                            itemEntity.getItemDescription(),
+                            itemEntity.getItemCount(),
+                            itemEntity.getItemFeeType(),
+                            itemEntity.getItemUnitPrice(),
+                            itemEntity.getTotalItemValue()
+                        )).collect(Collectors.toList()));
         }
 
         return newInvoiceDto;
@@ -71,22 +72,23 @@ public class InvoiceService {
         Pageable paging = PageRequest.of(page - 1, pageSize, Sort.by(sortBy));
 
         return invoicesRepository.findAll(paging)
-                .stream()
-                .map(
-                        invoiceEntity -> new InvoiceDto(
-                                invoiceEntity.getId(),
-                                invoiceEntity.getCompany().getName(),
-                                invoiceEntity.getCreateDate(),
-                                invoiceEntity.getModifiedDate(),
-                                invoiceEntity.getTotalValue(),
-                                invoiceEntity.getItems().stream()
-                                        .map(itemEntity -> new ItemDto(
-                                                itemEntity.getItemDescription(),
-                                                itemEntity.getItemCount(),
-                                                itemEntity.getItemFeeType(),
-                                                itemEntity.getItemUnitPrice(),
-                                                itemEntity.getTotalItemValue())).collect(Collectors.toList())
-                        )).collect(Collectors.toList());
+            .stream()
+            .map(
+                invoiceEntity -> new InvoiceDto(
+                    invoiceEntity.getId(),
+                    invoiceEntity.getCompany().getName(),
+                    invoiceEntity.getCreateDate(),
+                    invoiceEntity.getModifiedDate(),
+                    invoiceEntity.getTotalValue(),
+                    invoiceEntity.isPaid(),
+                    invoiceEntity.getItems().stream()
+                        .map(itemEntity -> new ItemDto(
+                            itemEntity.getItemDescription(),
+                            itemEntity.getItemCount(),
+                            itemEntity.getItemFeeType(),
+                            itemEntity.getItemUnitPrice(),
+                            itemEntity.getTotalItemValue())).collect(Collectors.toList())
+                )).collect(Collectors.toList());
     }
 
     public InvoiceDto addItems(Long invoiceNumber, List<ItemDto> itemDtoList) {
@@ -95,51 +97,53 @@ public class InvoiceService {
 
         if (invoiceEntity != null) {
             itemDtoList
-                    .forEach(
-                            itemDto -> {
-                                ItemEntity itemEntity =
-                                        new ItemEntity(
-                                                itemDto.getItemDescription(),
-                                                itemDto.getItemCount(),
-                                                itemDto.getItemFeeType(),
-                                                itemDto.getItemUnitPrice(),
-                                                invoiceEntity);
-                                this.itemRepository.save(itemEntity);
-                            });
+                .forEach(
+                    itemDto -> {
+                        ItemEntity itemEntity =
+                            new ItemEntity(
+                                itemDto.getItemDescription(),
+                                itemDto.getItemCount(),
+                                itemDto.getItemFeeType(),
+                                itemDto.getItemUnitPrice(),
+                                invoiceEntity);
+                        this.itemRepository.save(itemEntity);
+                    });
             newInvoiceDto = new InvoiceDto(
-                    invoiceEntity.getId(),
-                    invoiceEntity.getCompany().getName(),
-                    invoiceEntity.getCreateDate(),
-                    invoiceEntity.getModifiedDate(),
-                    invoiceEntity.getTotalValue(),
-                    invoiceEntity.getItems().stream()
-                            .map(itemEntity -> new ItemDto(
-                                    itemEntity.getItemDescription(),
-                                    itemEntity.getItemCount(),
-                                    itemEntity.getItemFeeType(),
-                                    itemEntity.getItemUnitPrice(),
-                                    itemEntity.getTotalItemValue())).collect(Collectors.toList()));
+                invoiceEntity.getId(),
+                invoiceEntity.getCompany().getName(),
+                invoiceEntity.getCreateDate(),
+                invoiceEntity.getModifiedDate(),
+                invoiceEntity.getTotalValue(),
+                invoiceEntity.isPaid(),
+                invoiceEntity.getItems().stream()
+                    .map(itemEntity -> new ItemDto(
+                        itemEntity.getItemDescription(),
+                        itemEntity.getItemCount(),
+                        itemEntity.getItemFeeType(),
+                        itemEntity.getItemUnitPrice(),
+                        itemEntity.getTotalItemValue())).collect(Collectors.toList()));
         }
         return newInvoiceDto;
     }
 
     public List<InvoiceDto> fetchInvoiceById(Long invoiceNumber) {
         return invoicesRepository.findById(invoiceNumber)
-                .stream()
-                .map(invoiceEntity -> new InvoiceDto(
-                        invoiceEntity.getId(),
-                        invoiceEntity.getCompany().getName(),
-                        invoiceEntity.getCreateDate(),
-                        invoiceEntity.getModifiedDate(),
-                        invoiceEntity.getTotalValue(),
-                        invoiceEntity.getItems().stream()
-                                .map(itemEntity -> new ItemDto(
-                                        itemEntity.getItemDescription(),
-                                        itemEntity.getItemCount(),
-                                        itemEntity.getItemFeeType(),
-                                        itemEntity.getItemUnitPrice(),
-                                        itemEntity.getTotalItemValue())).collect(Collectors.toList())
-                )).collect(Collectors.toList());
+            .stream()
+            .map(invoiceEntity -> new InvoiceDto(
+                invoiceEntity.getId(),
+                invoiceEntity.getCompany().getName(),
+                invoiceEntity.getCreateDate(),
+                invoiceEntity.getModifiedDate(),
+                invoiceEntity.getTotalValue(),
+                invoiceEntity.isPaid(),
+                invoiceEntity.getItems().stream()
+                    .map(itemEntity -> new ItemDto(
+                        itemEntity.getItemDescription(),
+                        itemEntity.getItemCount(),
+                        itemEntity.getItemFeeType(),
+                        itemEntity.getItemUnitPrice(),
+                        itemEntity.getTotalItemValue())).collect(Collectors.toList())
+            )).collect(Collectors.toList());
     }
 
     public void deleteInvoiceById(Long invoiceNumber) {

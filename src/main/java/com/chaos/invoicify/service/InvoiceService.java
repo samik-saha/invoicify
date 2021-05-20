@@ -172,4 +172,20 @@ public class InvoiceService {
          }
          return response;
     }
+
+
+    public Object updateInvoiceById(Long invoiceNumber, InvoiceDto invoiceDto) {
+        InvoiceEntity invoiceEntity = invoicesRepository.findById(invoiceNumber).orElse(null);
+        Response response;
+        if (invoiceEntity ==null || invoiceEntity.isPaid()){
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Invoice does NOT exist or Paid so cannot be Modified");
+        }
+        else{
+
+
+        }
+        return response;
+
+    }
 }

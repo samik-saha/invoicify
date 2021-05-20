@@ -5,6 +5,7 @@ import com.chaos.invoicify.dto.ItemDto;
 import com.chaos.invoicify.dto.InvoiceDto;
 import com.chaos.invoicify.helper.Address;
 import com.chaos.invoicify.helper.FeeType;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -438,6 +439,47 @@ public class InvoiceIT {
                     parameterWithName("page").description("Page Number"),
                     parameterWithName("pageSize").description("Page Size"),
                     parameterWithName("sortBy").description("Sort By Column"))));
+
+    }
+    @Test
+    public void modifyInvoice() throws Exception {
+        ItemDto itemDTo = new ItemDto("Item", 10, FeeType.RATEBASED, 50.10, null);
+        List<ItemDto> items = Arrays.asList(itemDTo);
+
+        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
+
+        MvcResult mvcResult = mockMvc.perform(post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
+                .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
+                .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
+                .andExpect(jsonPath("$.data.items").isNotEmpty())
+                .andReturn();
+
+        Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
+        invoiceDto.setPaid(true);
+
+        mockMvc.perform(post("/invoices/{id}",id)
+                .content(objectMapper.writeValueAsString(invoiceDto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
+                .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
+                .andExpect(jsonPath("$.data.items").isNotEmpty());
+
+        mockMvc.perform(get("/invoices/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("length()").value(1))
+                .andExpect(jsonPath("[0].invoiceNumber").isNumber())
+                .andExpect(jsonPath("[0].companyName").value("Company1"))
+                .andExpect(jsonPath("[0].createDate").isNotEmpty())
+                .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
+                .andExpect(jsonPath("[0].items.length()").value(1))
+                .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
+                .andExpect(jsonPath("[0].paid").value(true));
 
     }
 

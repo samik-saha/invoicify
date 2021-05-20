@@ -45,7 +45,7 @@ public class InvoiceEntity {
     public double getTotalValue() {
 
         return this.items.stream()
-            .map(x -> x.getTotalItemValue())
+            .map(ItemEntity::getTotalItemValue)
             .reduce(0.0, Double::sum);
     }
 

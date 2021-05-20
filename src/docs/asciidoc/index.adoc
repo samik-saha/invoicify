@@ -10,6 +10,8 @@ include::{snippets}/GetInvoices/http-request.adoc[]
 
 .response
 include::{snippets}/GetInvoices/http-response.adoc[]
+.Response Fields
+include::{snippets}/GetInvoices/response-fields.adoc[]
 
 ==== Get Invoices by Page
 
@@ -47,6 +49,8 @@ include::{snippets}/searchinvoicebyid/http-request.adoc[]
 
 .response
 include::{snippets}/searchinvoicebyid/http-response.adoc[]
+.Response Fields
+include::{snippets}/searchinvoicebyid/response-fields.adoc[]
 
 ==== Delete By Invoice ID
 

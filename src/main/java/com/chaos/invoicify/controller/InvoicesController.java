@@ -43,8 +43,12 @@ public class InvoicesController {
     @GetMapping
     public List<InvoiceDto> getAllInvoices(@RequestParam(defaultValue = "1") int page,
                                            @RequestParam(defaultValue = "10") int pageSize,
-                                           @RequestParam(defaultValue = "id") String sortBy) {
-        return invoiceService.fetchAllInvoices(page, pageSize, sortBy);
+                                           @RequestParam(defaultValue = "id") String sortBy,
+                                           @RequestParam(defaultValue = "") String company) {
+        if (company.isEmpty() || company.isBlank())
+            return invoiceService.fetchAllInvoices(page, pageSize, sortBy);
+        else
+            return invoiceService.fetchUnpaidInvoicesForCompany(company, page, pageSize, sortBy);
     }
 
     @GetMapping("{invoiceNumber}")
@@ -80,11 +84,7 @@ public class InvoicesController {
 
         return response;
     }
-    @PostMapping("{invoiceNumber}")
-    public Object updateInvoiceById(@PathVariable Long invoiceNumber, @RequestBody InvoiceDto invoiceDto) {
-        return invoiceService.updateInvoiceById(invoiceNumber, invoiceDto);
 
-    }
 
 
 }

@@ -441,47 +441,56 @@ public class InvoiceIT {
                     parameterWithName("sortBy").description("Sort By Column"))));
 
     }
+
+
     @Test
-    public void modifyInvoice() throws Exception {
-        ItemDto itemDTo = new ItemDto("Item", 10, FeeType.RATEBASED, 50.10, null);
+    public void getUnpaidInvoicesByCompany() throws Exception{
+        ItemDto itemDTo = new ItemDto("Item1", 10, FeeType.RATEBASED, 20.10, null);
         List<ItemDto> items = Arrays.asList(itemDTo);
 
-        InvoiceDto invoiceDto = new InvoiceDto("Company1", items);
+        for (int j = 1; j <= 3; j++){
+            companyDto = new CompanyDto("TestCompany" + j, address1, "Samik",
+                    "Account Payable", "467-790-0128");
+            mockMvc
+                    .perform(
+                            RestDocumentationRequestBuilders.post("/company")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(companyDto)));
 
-        MvcResult mvcResult = mockMvc.perform(post("/invoices")
-                .content(objectMapper.writeValueAsString(invoiceDto))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.getReasonPhrase()))
-                .andExpect(jsonPath("$.status_code").value(HttpStatus.CREATED.value()))
-                .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.items").isNotEmpty())
-                .andReturn();
+            InvoiceDto invoiceDto = new InvoiceDto("TestCompany" + j, items);
 
-        Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
-        invoiceDto.setPaid(true);
+            for (int i = 0; i < 15; i++) {
+                mockMvc.perform(post("/invoices")
+                        .content(objectMapper.writeValueAsString(invoiceDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isCreated());
+            }
+        }
 
-        mockMvc.perform(post("/invoices/{id}",id)
-                .content(objectMapper.writeValueAsString(invoiceDto))
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/invoices").queryParam("company", "TestCompany2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
-                .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-                .andExpect(jsonPath("$.data.items").isNotEmpty());
+                .andExpect(jsonPath("length()").value(10))
+                .andExpect(jsonPath("$[0].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[1].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[2].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[3].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[4].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[0].paid").value("false"))
+                .andExpect(jsonPath("$[1].paid").value("false"))
+                .andExpect(jsonPath("$[2].paid").value("false"))
+                .andExpect(jsonPath("$[3].paid").value("false"))
+                .andExpect(jsonPath("$[4].paid").value("false"));
 
-        mockMvc.perform(get("/invoices/{id}", id))
+        mockMvc.perform(get("/invoices").queryParam("company", "TestCompany2")
+                .queryParam("page", "2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("length()").value(1))
-                .andExpect(jsonPath("[0].invoiceNumber").isNumber())
-                .andExpect(jsonPath("[0].companyName").value("Company1"))
-                .andExpect(jsonPath("[0].createDate").isNotEmpty())
-                .andExpect(jsonPath("[0].modifiedDate").isNotEmpty())
-                .andExpect(jsonPath("[0].items.length()").value(1))
-                .andExpect(jsonPath("[0].totalInvoiceValue").value(201.00))
-                .andExpect(jsonPath("[0].paid").value(true));
+                .andExpect(jsonPath("length()").value(5))
+                .andExpect(jsonPath("$[0].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[1].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[2].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[3].companyName").value("TestCompany2"))
+                .andExpect(jsonPath("$[4].companyName").value("TestCompany2"));
 
     }
-
 
 }

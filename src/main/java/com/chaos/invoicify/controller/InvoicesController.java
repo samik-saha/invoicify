@@ -19,7 +19,7 @@ public class InvoicesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Object addInvoices(@RequestBody InvoiceDto invoiceDto) {
+        public Object addInvoices(@RequestBody InvoiceDto invoiceDto) {
 
         InvoiceDto responseInvoiceDto = this.invoiceService.addInvoices(invoiceDto);
         Response response;

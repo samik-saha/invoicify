@@ -49,9 +49,9 @@ public class InvoiceService {
                                 itemDto.getItemUnitPrice(),
                                 invoiceEntity)).collect(Collectors.toList()));
             }
-            if (invoiceDto.getCreateDate() !=null){
+            if (invoiceDto.getCreateDate() != null) {
                 invoiceEntity.setCreateDate(
-                        invoiceDto.getCreateDate()
+                    invoiceDto.getCreateDate()
                 );
             }
 
@@ -161,28 +161,74 @@ public class InvoiceService {
         LocalDate yearBackDate = currentDate.minusYears(1);
         System.out.println(yearBackDate);
         Response response;
-         if (yearBackDate.isAfter(createdDate) && invoiceEntity.isPaid()){
-             invoicesRepository.deleteById(invoiceNumber);
-             response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
-                     "Invoice is Deleted");
+        if (yearBackDate.isAfter(createdDate) && invoiceEntity.isPaid()) {
+            invoicesRepository.deleteById(invoiceNumber);
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
+                "Invoice is Deleted");
+        } else {
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Invoice is NOT an year later or Unpaid so cannot be Deleted");
         }
-         else{
-             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                     "Invoice is NOT an year later or Unpaid so cannot be Deleted");
-         }
-         return response;
+        return response;
     }
 
 
     public Object updateInvoiceById(Long invoiceNumber, InvoiceDto invoiceDto) {
         InvoiceEntity invoiceEntity = invoicesRepository.findById(invoiceNumber).orElse(null);
-        Response response;
-        if (invoiceEntity ==null || invoiceEntity.isPaid()){
-            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
-                    "Invoice does NOT exist or Paid so cannot be Modified");
-        }
-        else{
 
+        Response response;
+        InvoiceDto newInvoiceDto;
+
+        if (invoiceEntity == null || invoiceEntity.isPaid()) {
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Invoice does NOT exist or Paid so cannot be Modified");
+        } else {
+            if (invoiceDto.isPaid())
+                invoiceEntity.setPaid(true);
+
+            if (invoiceDto.getCompanyName() != null) {
+                CompanyEntity companyEntity = companyRepository.findByName(invoiceDto.getCompanyName());
+
+                if (companyEntity != null)
+                    invoiceEntity.setCompany(companyEntity);
+                else
+                    return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                        "Invalid Company Name");
+            }
+
+            if (invoiceDto.getItems() != null) {
+
+                invoiceEntity.setItems(
+                    invoiceDto.getItems().stream()
+                        .map(
+                            itemDto -> new ItemEntity(
+                                itemDto.getItemDescription(),
+                                itemDto.getItemCount(),
+                                itemDto.getItemFeeType(),
+                                itemDto.getItemUnitPrice(),
+                                invoiceEntity)).collect(Collectors.toList()));
+            }
+
+            invoiceEntity.setModifiedDate(LocalDate.now());
+
+            invoicesRepository.save(invoiceEntity);
+            newInvoiceDto = new InvoiceDto(invoiceEntity.getId(),
+                invoiceEntity.getCompany().getName(),
+                invoiceEntity.getCreateDate(),
+                invoiceEntity.getModifiedDate(),
+                invoiceEntity.getTotalValue(),
+                invoiceEntity.isPaid(),
+                invoiceEntity.getItems().stream()
+                    .map(
+                        itemEntity -> new ItemDto(
+                            itemEntity.getItemDescription(),
+                            itemEntity.getItemCount(),
+                            itemEntity.getItemFeeType(),
+                            itemEntity.getItemUnitPrice(),
+                            itemEntity.getTotalItemValue()
+                        )).collect(Collectors.toList()));
+
+            response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(), newInvoiceDto);
 
         }
         return response;

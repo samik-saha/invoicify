@@ -24,9 +24,13 @@ include::{snippets}/Paginated-Invoices/http-response.adoc[]
 
 .request
 include::{snippets}/AddInvoices/http-request.adoc[]
+.Request Fields
+include::{snippets}/AddInvoices/request-fields.adoc[]
 
 .response
 include::{snippets}/AddInvoices/http-response.adoc[]
+.Response Fields
+include::{snippets}/AddInvoices/request-fields.adoc[]
 
 ==== Add Items
 

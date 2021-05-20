@@ -101,6 +101,7 @@ public class InvoiceServiceTest {
                         invoiceEntity.getCreateDate(),
                         invoiceEntity.getModifiedDate(),
                         invoiceEntity.getTotalValue(),
+                        invoiceEntity.isPaid(),
                         invoiceEntity.getItems().stream()
                                 .map(itemEntity -> new ItemDto(
                                         itemEntity.getItemDescription(),
@@ -125,6 +126,7 @@ public class InvoiceServiceTest {
                         invoiceEntity.getCreateDate(),
                         invoiceEntity.getModifiedDate(),
                         invoiceEntity.getTotalValue(),
+                        invoiceEntity.isPaid(),
                         invoiceEntity.getItems().stream()
                                 .map(itemEntity -> new ItemDto(
                                         itemEntity.getItemDescription(),
@@ -138,9 +140,12 @@ public class InvoiceServiceTest {
 
     @Test
     public void deleteInvoicesByIdTest(){
-
-        invoiceService.deleteInvoiceById(2L);
-        verify(invoicesRepository).deleteById(2L);
+        invoiceEntity.setId(2L);
+        invoiceEntity.setCreateDate(LocalDate.now().minusYears(2));
+        invoiceEntity.setPaid(true);
+        when(invoicesRepository.findById(invoiceEntity.getId())).thenReturn(java.util.Optional.ofNullable(invoiceEntity));
+        invoiceService.deleteInvoiceById(invoiceEntity.getId());
+        verify(invoicesRepository).deleteById(invoiceEntity.getId());
     }
 
     @Test

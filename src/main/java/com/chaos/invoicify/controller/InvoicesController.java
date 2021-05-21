@@ -53,8 +53,9 @@ public class InvoicesController {
     }
 
     @DeleteMapping("{invoiceNumber}")
-    public void deleteInvoiceById(@PathVariable Long invoiceNumber) {
-        invoiceService.deleteInvoiceById(invoiceNumber);
+    public Object deleteInvoiceById(@PathVariable Long invoiceNumber) {
+        return invoiceService.deleteInvoiceById(invoiceNumber);
+
     }
 
     @PostMapping("{invoiceNumber}/items")
@@ -79,5 +80,12 @@ public class InvoicesController {
 
         return response;
     }
+
+    @PostMapping("{invoiceNumber}")
+    public Object updateInvoiceById(@PathVariable Long invoiceNumber, @RequestBody InvoiceDto invoiceDto) {
+        return invoiceService.updateInvoiceById(invoiceNumber, invoiceDto);
+
+    }
+
 
 }

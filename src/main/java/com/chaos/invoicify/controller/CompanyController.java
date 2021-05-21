@@ -38,7 +38,6 @@ public class CompanyController {
                 response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
                     "Company name cannot be empty!");
         }
-
         return response;
 
     }

@@ -16,8 +16,8 @@ public class InvoiceDto {
     LocalDate createDate;
     LocalDate modifiedDate;
     double totalInvoiceValue;
+    boolean isPaid;
     List<ItemDto> items;
-
 
     public InvoiceDto(String companyName) {
         this.companyName = companyName;
@@ -25,6 +25,12 @@ public class InvoiceDto {
 
     public InvoiceDto(String companyName, List<ItemDto> items) {
         this.companyName = companyName;
+        this.items = items;
+    }
+
+    public InvoiceDto(String companyName, LocalDate createDate, List<ItemDto> items) {
+        this.companyName = companyName;
+        this.createDate = createDate;
         this.items = items;
     }
 }

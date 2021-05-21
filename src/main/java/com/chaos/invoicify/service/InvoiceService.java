@@ -234,4 +234,31 @@ public class InvoiceService {
         return response;
 
     }
+
+    public List<InvoiceDto> fetchUnpaidInvoicesForCompany(String companyName, int page, int pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(page - 1, pageSize, Sort.by(sortBy));
+
+        return invoicesRepository.findByCompany_Name(paging, companyName).stream()
+            .filter(invoiceEntity -> !invoiceEntity.isPaid())
+            .map(
+                invoiceEntity ->
+                    new InvoiceDto(
+                        invoiceEntity.getId(),
+                        invoiceEntity.getCompany().getName(),
+                        invoiceEntity.getCreateDate(),
+                        invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
+                        invoiceEntity.isPaid(),
+                        invoiceEntity.getItems().stream()
+                            .map(
+                                itemEntity ->
+                                    new ItemDto(
+                                        itemEntity.getItemDescription(),
+                                        itemEntity.getItemCount(),
+                                        itemEntity.getItemFeeType(),
+                                        itemEntity.getItemUnitPrice(),
+                                        itemEntity.getTotalItemValue()))
+                            .collect(Collectors.toList())))
+            .collect(Collectors.toList());
+    }
 }

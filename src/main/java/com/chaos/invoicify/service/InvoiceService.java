@@ -156,6 +156,11 @@ public class InvoiceService {
 
     public Response deleteInvoiceById(Long invoiceNumber) {
         InvoiceEntity invoiceEntity = invoicesRepository.findById(invoiceNumber).orElse(null);
+
+        if (invoiceEntity == null)
+            return new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                "Invoice not found!");
+
         LocalDate createdDate = invoiceEntity.getCreateDate();
         LocalDate currentDate = LocalDate.now();
         LocalDate yearBackDate = currentDate.minusYears(1);

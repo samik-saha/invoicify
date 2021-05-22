@@ -26,10 +26,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,7 +61,7 @@ public class InvoiceIT {
 
         mockMvc
             .perform(
-                RestDocumentationRequestBuilders.post("/company")
+                post("/company")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(companyDto)))
             .andExpect(jsonPath("$.status").value("Created"))
@@ -69,7 +70,7 @@ public class InvoiceIT {
 
         mockMvc
             .perform(
-                RestDocumentationRequestBuilders.post("/company")
+                post("/company")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(companyDto3)))
             .andExpect(jsonPath("$.status").value("Created"))
@@ -632,7 +633,7 @@ public class InvoiceIT {
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(jsonPath("$.data").value("Invalid Company Name"))
-            .andDo(document("UpdateInvoice"))
+
         ;
 
         mockMvc.perform(get("/invoices/{id}", id))
@@ -725,7 +726,39 @@ public class InvoiceIT {
             .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
             .andExpect(jsonPath("$.data.invoiceNumber").isNumber())
-            .andExpect(jsonPath("$.data.items").isNotEmpty());
+            .andExpect(jsonPath("$.data.items").isNotEmpty())
+                .andDo(document("UpdateInvoice",
+                        pathParameters(parameterWithName("id").description("Invoice Number")),
+                        requestFields(
+                                fieldWithPath("invoiceNumber").description("Invoice Number")
+                                , fieldWithPath("companyName").description("Company Name")
+                                , fieldWithPath("createDate").description("Invoice Creation Date")
+                                , fieldWithPath("modifiedDate").description("Invoice Last Modified Date")
+                                , fieldWithPath("items").description("List of Items")
+                                , fieldWithPath("items[0].itemDescription").description("Item Description")
+                                , fieldWithPath("items[0].itemCount").description("Item Count")
+                                , fieldWithPath("items[0].itemFeeType").description("Item FeeType")
+                                , fieldWithPath("items[0].itemUnitPrice").description("Item Unit Price")
+                                , fieldWithPath("items[0].totalItemValue").description("Total Item Value")
+                                , fieldWithPath("totalInvoiceValue").description("Total Invoice Value")
+                                , fieldWithPath("paid").description("Is Invoice Paid?")
+                        ),
+                        responseFields(
+                                fieldWithPath("status").description("Status")
+                                , fieldWithPath("status_code").description("Status Code")
+                                , fieldWithPath("data.invoiceNumber").description("Invoice Number")
+                                , fieldWithPath("data.companyName").description("Company Name")
+                                , fieldWithPath("data.createDate").description("Invoice Creation Date")
+                                , fieldWithPath("data.modifiedDate").description("Invoice Last Modified Date")
+                                , fieldWithPath("data.items").description("List of Items")
+                                , fieldWithPath("data.items[0].itemDescription").description("Item Description")
+                                , fieldWithPath("data.items[0].itemCount").description("Item Count")
+                                , fieldWithPath("data.items[0].itemFeeType").description("Item FeeType")
+                                , fieldWithPath("data.items[0].itemUnitPrice").description("Item Unit Price")
+                                , fieldWithPath("data.items[0].totalItemValue").description("Total Item Value")
+                                , fieldWithPath("data.totalInvoiceValue").description("Total Invoice Value")
+                                , fieldWithPath("data.paid").description("Is Invoice Paid?")
+                        )));
 
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())

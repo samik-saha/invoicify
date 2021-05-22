@@ -39,10 +39,15 @@ include::{snippets}/AddInvoices/request-fields.adoc[]
 ==== Update Invoices
 
 .request
-include::{snippets}/Update Invoice/http-request.adoc[]
+include::{snippets}/UpdateInvoice/http-request.adoc[]
+include::{snippets}/UpdateInvoice/path-parameters.adoc[]
+.Request Fields
+include::{snippets}/UpdateInvoice/request-fields.adoc[]
 
 .response
-include::{snippets}/Update Invoice/http-response.adoc[]
+include::{snippets}/UpdateInvoice/http-response.adoc[]
+.Response Fields
+include::{snippets}/UpdateInvoice/request-fields.adoc[]
 
 ==== Add Items
 
@@ -65,12 +70,13 @@ include::{snippets}/searchinvoicebyid/response-fields.adoc[]
 ==== Delete By Invoice ID
 
 .request
-include::{snippets}/Delete Invoice/http-request.adoc[]
+include::{snippets}/DeleteInvoice/http-request.adoc[]
 
 .response
-include::{snippets}/Delete Invoice/http-response.adoc[]
+include::{snippets}/DeleteInvoice/http-response.adoc[]
 
 === Companies
+
 ==== Add Company
 
 .request

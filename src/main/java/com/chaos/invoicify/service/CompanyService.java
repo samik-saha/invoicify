@@ -54,10 +54,16 @@ public class CompanyService {
 
         if (companyEntity != null) {
             if (companyDto.getName() != null) {
-                companyEntity.setName(companyDto.getName());
-                nameChanged = true;
-            }
+                CompanyEntity companyEntity1 = companyRepository.findByName(companyDto.getName());
+                if (companyEntity1 == null) {
+                    companyEntity.setName(companyDto.getName());
+                    nameChanged = true;
+                }
+                else{
+                    return StatusCode.DUPLICATE;
 
+                }
+            }
             Address newAddress = companyDto.getAddress();
             Address address = companyEntity.getAddress();
             if (newAddress != null) {

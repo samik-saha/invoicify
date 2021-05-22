@@ -59,8 +59,6 @@ public class CompanyController {
         ResponseEntity<Response> responseEntity;
 
         StatusCode statusCode = companyService.updateCompany(companyName, companyDto);
-
-
         if (statusCode == StatusCode.NOTFOUND) {
             response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
                 "Company does not exist!");
@@ -72,12 +70,18 @@ public class CompanyController {
                 "Company updated successfully!");
 
             responseEntity = ResponseEntity.status(HttpStatus.FOUND)
-//                .body(response)
                 .location(URI.create("/company/" + newCompanyName))
                 .build()
             ;
 
-        } else {
+        }
+        else if (statusCode==StatusCode.DUPLICATE){
+            response = new Response(HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value(),
+                    "Company with this name already Exists");
+            responseEntity = new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        else {
             response = new Response(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
                 "Company updated successfully!");
             responseEntity = new ResponseEntity<>(response, HttpStatus.OK);

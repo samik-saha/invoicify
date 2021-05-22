@@ -18,8 +18,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -292,9 +291,8 @@ public class CompanyIt {
             post("/company/{companyName}", "Company1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedCompanyDto)))
-        .andExpect(jsonPath("$.status").value(HttpStatus.OK.getReasonPhrase()))
-        .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
-        .andExpect(jsonPath("$.data").value("Company updated successfully!"))
+        .andExpect(status().isFound())
+        .andExpect(redirectedUrl("/company/Apple"))
         .andDo(
             document(
                 "Update-Company",
@@ -304,11 +302,8 @@ public class CompanyIt {
                     fieldWithPath("address").description("Company address"),
                     fieldWithPath("contactName").description("Contact name"),
                     fieldWithPath("contactTitle").description("Contact title"),
-                    fieldWithPath("contactPhoneNumber").description("Contact phone number")),
-                responseFields(
-                    fieldWithPath("status").description("Return the http status description"),
-                    fieldWithPath("status_code").description("Return the http status code"),
-                    fieldWithPath("data").description("Return company update status"))));
+                    fieldWithPath("contactPhoneNumber").description("Contact phone number"))
+            ));
 
     mockMvc
             .perform(get("/company"))
@@ -421,6 +416,47 @@ public class CompanyIt {
                     fieldWithPath("data[0].city").description("City"),
                     fieldWithPath("data[0].state").description("State"))
             ));
+  }
+
+  @Test
+  public void getCompanyByNameTest() throws Exception {
+    mockMvc
+        .perform(
+            post("/company")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companyDto)))
+        .andExpect(jsonPath("$.status").value("Created"))
+        .andExpect(jsonPath("$.status_code").value(201))
+        .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+    mockMvc
+        .perform(get("/company/{companyName}","Company1"))
+        .andExpect(jsonPath("$.status").value("OK"))
+        .andExpect(jsonPath("$.status_code").value(200))
+        .andExpect(jsonPath("$.data.name").value("Company1"))
+        .andExpect(jsonPath("$.data.address").value(address1))
+        .andExpect(jsonPath("$.data.contactName").value("Samik"))
+        .andExpect(jsonPath("$.data.contactTitle").value("Account Payable"))
+        .andExpect(jsonPath("$.data.contactPhoneNumber").value("467-790-0128"))
+        .andDo(
+            document(
+                "Get-Company-By-Name",
+                pathParameters(parameterWithName("companyName").description("Company name")),
+                responseFields(
+                    fieldWithPath("status").description("Return the http status description"),
+                    fieldWithPath("status_code").description("Return the http status code"),
+                    fieldWithPath("data").description("List of companies"),
+                    fieldWithPath("data.name").description("Company name"),
+                    fieldWithPath("data.address.street").description("Address Line 1"),
+                    fieldWithPath("data.address.city").description("City"),
+                    fieldWithPath("data.address.state").description("Street Address"),
+                    fieldWithPath("data.address.country").description("Country"),
+                    fieldWithPath("data.address.zipCode").description("Zip Code"),
+                    fieldWithPath("data.contactName").description("Contact name"),
+                    fieldWithPath("data.contactTitle").description("Contact title"),
+                    fieldWithPath("data.contactPhoneNumber")
+                        .description("Contact phone number"))));
+
   }
 
 }

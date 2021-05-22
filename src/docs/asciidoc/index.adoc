@@ -1,5 +1,7 @@
 = Invoicify API
 Welcome to the Invoicify Application by Chaos!
+:toc:
+:toclevels: 3
 
 === Invoices
 
@@ -33,6 +35,14 @@ include::{snippets}/AddInvoices/request-fields.adoc[]
 include::{snippets}/AddInvoices/http-response.adoc[]
 .Response Fields
 include::{snippets}/AddInvoices/request-fields.adoc[]
+
+==== Update Invoices
+
+.request
+include::{snippets}/Update Invoice/http-request.adoc[]
+
+.response
+include::{snippets}/Update Invoice/http-response.adoc[]
 
 ==== Add Items
 
@@ -103,3 +113,16 @@ include::{snippets}/Update-Company/request-fields.adoc[]
 include::{snippets}/Update-Company/http-response.adoc[]
 .Response Fields
 include::{snippets}/Update-Company/response-fields.adoc[]
+
+
+==== Get Company By Name
+
+.request
+include::{snippets}/Get-Company-By-Name/http-request.adoc[]
+
+include::{snippets}/Get-Company-By-Name/path-parameters.adoc[]
+
+.response
+include::{snippets}/Get-Company-By-Name/http-response.adoc[]
+.Response Fields
+include::{snippets}/Get-Company-By-Name/response-fields.adoc[]

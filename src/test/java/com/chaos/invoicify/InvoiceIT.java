@@ -632,7 +632,7 @@ public class InvoiceIT {
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(jsonPath("$.data").value("Invalid Company Name"))
-            .andDo(document("Update Invoice"))
+            .andDo(document("UpdateInvoice"))
         ;
 
         mockMvc.perform(get("/invoices/{id}", id))

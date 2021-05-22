@@ -459,5 +459,40 @@ public class CompanyIt {
                             .description("Contact phone number"))));
 
     }
+    @Test
+    public void checkDuplicateCompanyUpdate() throws Exception{
+        mockMvc
+                .perform(
+                        post("/company")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(companyDto)))
+                .andExpect(jsonPath("$.status").value("Created"))
+                .andExpect(jsonPath("$.status_code").value(201))
+                .andExpect(jsonPath("$.data").value("Company created successfully!"));
+        mockMvc
+                .perform(
+                        post("/company")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(companyDto2)))
+                .andExpect(jsonPath("$.status").value("Created"))
+                .andExpect(jsonPath("$.status_code").value(201))
+                .andExpect(jsonPath("$.data").value("Company created successfully!"));
+
+
+        CompanyDto updatedCompanyDto = new CompanyDto();
+        updatedCompanyDto.setName("Company2");
+
+        mockMvc
+                .perform(
+                        post("/company/{companyName}", "Company1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(updatedCompanyDto)))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
+                .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.data")
+                        .value("Company with this name already Exists"));
+
+
+    }
 
 }

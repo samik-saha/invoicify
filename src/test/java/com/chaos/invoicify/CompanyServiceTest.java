@@ -82,5 +82,13 @@ public class CompanyServiceTest {
 
     verify(companyRepository).save(updatedCompanyEntity);
   }
+  @Test
+  public void getCompanyByNameTest() {
+    when(companyRepository.findByName(companyEntity.getName())).
+            thenReturn(companyEntity);
+    CompanyDto actualCompanyDto = companyService.fetchCompanyByName(companyEntity.getName());
+    assertThat(actualCompanyDto).isEqualTo(companyDto);
+
+  }
 
 }

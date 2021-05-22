@@ -154,4 +154,37 @@ public class InvoiceServiceTest {
         invoiceService.addItems(invoiceEntity.getId(),List.of(itemDto));
         verify(itemRepository).save(itemEntity);
     }
+
+    @Test
+    public void getInvoicesByCompany(){
+        Pageable paging = PageRequest.of(0, 10, Sort.by("id"));
+        List<InvoiceEntity> invoiceEntities = List.of(invoiceEntity);
+
+        when(invoicesRepository.findByCompany_Name(paging,invoiceEntity.getCompany().getName())).
+                thenReturn(invoiceEntities);
+
+        List<InvoiceDto> invoiceDtoList = invoiceService.
+                fetchUnpaidInvoicesForCompany(invoiceEntity.getCompany().getName(),
+                        1,10,"id");
+
+        assertThat(invoiceDtoList).isEqualTo(List.of(
+                new InvoiceDto(
+                        invoiceEntity.getId(),
+                        invoiceEntity.getCompany().getName(),
+                        invoiceEntity.getCreateDate(),
+                        invoiceEntity.getModifiedDate(),
+                        invoiceEntity.getTotalValue(),
+                        invoiceEntity.isPaid(),
+                        invoiceEntity.getItems().stream()
+                                .map(itemEntity -> new ItemDto(
+                                        itemEntity.getItemDescription(),
+                                        itemEntity.getItemCount(),
+                                        itemEntity.getItemFeeType(),
+                                        itemEntity.getItemUnitPrice(),
+                                        itemEntity.getTotalItemValue()))
+                                .collect(Collectors.toList())
+                )
+        ));
+    }
+
 }

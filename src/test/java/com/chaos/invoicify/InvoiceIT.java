@@ -730,17 +730,17 @@ public class InvoiceIT {
                 .andDo(document("UpdateInvoice",
                         pathParameters(parameterWithName("id").description("Invoice Number")),
                         requestFields(
-                                fieldWithPath("invoiceNumber").description("Invoice Number")
+                                fieldWithPath("invoiceNumber").ignored()
                                 , fieldWithPath("companyName").description("Company Name")
-                                , fieldWithPath("createDate").description("Invoice Creation Date")
-                                , fieldWithPath("modifiedDate").description("Invoice Last Modified Date")
+                                , fieldWithPath("createDate").ignored()
+                                , fieldWithPath("modifiedDate").ignored()
                                 , fieldWithPath("items").description("List of Items")
                                 , fieldWithPath("items[0].itemDescription").description("Item Description")
                                 , fieldWithPath("items[0].itemCount").description("Item Count")
                                 , fieldWithPath("items[0].itemFeeType").description("Item FeeType")
                                 , fieldWithPath("items[0].itemUnitPrice").description("Item Unit Price")
                                 , fieldWithPath("items[0].totalItemValue").description("Total Item Value")
-                                , fieldWithPath("totalInvoiceValue").description("Total Invoice Value")
+                                , fieldWithPath("totalInvoiceValue").ignored()
                                 , fieldWithPath("paid").description("Is Invoice Paid?")
                         ),
                         responseFields(

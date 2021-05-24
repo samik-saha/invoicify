@@ -1,7 +1,7 @@
 = Invoicify API
 Welcome to the Invoicify Application by Chaos!
 :toc:
-:toclevels: 3
+:toclevels: 4
 
 === Invoices
 
@@ -34,7 +34,7 @@ include::{snippets}/AddInvoices/request-fields.adoc[]
 .response
 include::{snippets}/AddInvoices/http-response.adoc[]
 .Response Fields
-include::{snippets}/AddInvoices/request-fields.adoc[]
+include::{snippets}/AddInvoices/response-fields.adoc[]
 
 ==== Update Invoices
 
@@ -47,7 +47,19 @@ include::{snippets}/UpdateInvoice/request-fields.adoc[]
 .response
 include::{snippets}/UpdateInvoice/http-response.adoc[]
 .Response Fields
-include::{snippets}/UpdateInvoice/request-fields.adoc[]
+include::{snippets}/UpdateInvoice/response-fields.adoc[]
+
+===== UpdateInvalidCompanyOnInvoice
+
+.request
+include::{snippets}/UpdateInvalidCompanyName-Error/http-request.adoc[]
+.Request Fields
+include::{snippets}/UpdateInvalidCompanyName-Error/request-fields.adoc[]
+
+.response
+include::{snippets}/UpdateInvalidCompanyName-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/UpdateInvalidCompanyName-Error/response-fields.adoc[]
 
 ==== Add Items
 
@@ -60,12 +72,12 @@ include::{snippets}/AddItems/http-response.adoc[]
 ==== Search By Invoice ID
 
 .request
-include::{snippets}/searchinvoicebyid/http-request.adoc[]
+include::{snippets}/SearchInvoiceById/http-request.adoc[]
 
 .response
-include::{snippets}/searchinvoicebyid/http-response.adoc[]
+include::{snippets}/SearchInvoiceById/http-response.adoc[]
 .Response Fields
-include::{snippets}/searchinvoicebyid/response-fields.adoc[]
+include::{snippets}/SearchInvoiceById/response-fields.adoc[]
 
 ==== Delete By Invoice ID
 
@@ -74,6 +86,16 @@ include::{snippets}/DeleteInvoice/http-request.adoc[]
 
 .response
 include::{snippets}/DeleteInvoice/http-response.adoc[]
+
+===== Delete Invoice Failed Date Check
+.request
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/http-request.adoc[]
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/path-parameters.adoc[]
+
+.response
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/response-fields.adoc[]
 
 === Companies
 
@@ -87,6 +109,26 @@ include::{snippets}/Create-Company/request-fields.adoc[]
 include::{snippets}/Create-Company/http-response.adoc[]
 .Response Fields
 include::{snippets}/Create-Company/response-fields.adoc[]
+
+===== Add Company Duplicate Error
+.request
+include::{snippets}/AddDuplicateCompany-Error/http-request.adoc[]
+.Request Fields
+include::{snippets}/AddDuplicateCompany-Error/request-fields.adoc[]
+.response
+include::{snippets}/AddDuplicateCompany-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/AddDuplicateCompany-Error/response-fields.adoc[]
+
+===== Add Company with Blank Name Error
+.request
+include::{snippets}/AddCompanyBlankName-Error/http-request.adoc[]
+.Request Fields
+include::{snippets}/AddCompanyBlankName-Error/request-fields.adoc[]
+.response
+include::{snippets}/AddCompanyBlankName-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/AddCompanyBlankName-Error/response-fields.adoc[]
 
 ==== Get All Companies
 

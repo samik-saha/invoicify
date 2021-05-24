@@ -192,7 +192,22 @@ public class CompanyIt {
                     .content(objectMapper.writeValueAsString(companyDto)))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
-            .andExpect(jsonPath("$.data").value("Company already exist"));
+            .andExpect(jsonPath("$.data").value("Company already exist"))
+            .andDo(document("AddDuplicateCompany-Error",
+                    requestFields(
+                            fieldWithPath("name").description("Duplicate Company name"),
+                            fieldWithPath("address.street").ignored(),
+                            fieldWithPath("address.city").ignored(),
+                            fieldWithPath("address.state").ignored(),
+                            fieldWithPath("address.country").ignored(),
+                            fieldWithPath("address.zipCode").ignored(),
+                            fieldWithPath("contactName").ignored(),
+                            fieldWithPath("contactTitle").ignored(),
+                            fieldWithPath("contactPhoneNumber").ignored()),
+                    responseFields(
+                            fieldWithPath("status").description("Return the http status description"),
+                            fieldWithPath("status_code").description("Return the http status code"),
+                            fieldWithPath("data").description("Error message"))));
     }
 
     @Test
@@ -217,7 +232,22 @@ public class CompanyIt {
                     .content(objectMapper.writeValueAsString(companyDtoBlankName)))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
-            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"));
+            .andExpect(jsonPath("$.data").value("Company name cannot be empty!"))
+                .andDo(document("AddCompanyBlankName-Error",
+                        requestFields(
+                                fieldWithPath("name").description("Blank Company Name"),
+                                fieldWithPath("address.street").ignored(),
+                                fieldWithPath("address.city").ignored(),
+                                fieldWithPath("address.state").ignored(),
+                                fieldWithPath("address.country").ignored(),
+                                fieldWithPath("address.zipCode").ignored(),
+                                fieldWithPath("contactName").ignored(),
+                                fieldWithPath("contactTitle").ignored(),
+                                fieldWithPath("contactPhoneNumber").ignored()),
+                        responseFields(
+                                fieldWithPath("status").description("Return the http status description"),
+                                fieldWithPath("status_code").description("Return the http status code"),
+                                fieldWithPath("data").description("Error message"))));;
     }
 
     @Test

@@ -34,7 +34,7 @@ include::{snippets}/AddInvoices/request-fields.adoc[]
 .response
 include::{snippets}/AddInvoices/http-response.adoc[]
 .Response Fields
-include::{snippets}/AddInvoices/request-fields.adoc[]
+include::{snippets}/AddInvoices/response-fields.adoc[]
 
 ==== Update Invoices
 
@@ -47,7 +47,19 @@ include::{snippets}/UpdateInvoice/request-fields.adoc[]
 .response
 include::{snippets}/UpdateInvoice/http-response.adoc[]
 .Response Fields
-include::{snippets}/UpdateInvoice/request-fields.adoc[]
+include::{snippets}/UpdateInvoice/response-fields.adoc[]
+
+===== UpdateInvalidCompanyOnInvoice
+
+.request
+include::{snippets}/UpdateInvalidCompanyName-Error/http-request.adoc[]
+.Request Fields
+include::{snippets}/UpdateInvalidCompanyName-Error/request-fields.adoc[]
+
+.response
+include::{snippets}/UpdateInvalidCompanyName-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/UpdateInvalidCompanyName-Error/response-fields.adoc[]
 
 ==== Add Items
 
@@ -74,6 +86,16 @@ include::{snippets}/DeleteInvoice/http-request.adoc[]
 
 .response
 include::{snippets}/DeleteInvoice/http-response.adoc[]
+
+===== Delete Invoice Failed Date Check
+.request
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/http-request.adoc[]
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/path-parameters.adoc[]
+
+.response
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/http-response.adoc[]
+.Response Fields
+include::{snippets}/DeleteInvoiceFailedDateCheck-Error/response-fields.adoc[]
 
 === Companies
 

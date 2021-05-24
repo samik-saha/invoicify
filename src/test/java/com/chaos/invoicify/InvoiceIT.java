@@ -465,7 +465,13 @@ public class InvoiceIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.data").value("Invoice is NOT an year later or Unpaid so cannot be Deleted"))
-            .andDo(document("DeleteInvoice"));
+        .andDo(document("DeleteInvoiceFailedDateCheck-Error",
+                pathParameters(parameterWithName("id").description("Invoice Number")),
+                responseFields(
+                        fieldWithPath("status").description("Status")
+                        , fieldWithPath("status_code").description("Status Code")
+                        , fieldWithPath("data").description("DeleteInvoiceFailedDateCheck-Error")
+                )));
 
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())
@@ -633,9 +639,27 @@ public class InvoiceIT {
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(jsonPath("$.data").value("Invalid Company Name"))
-
+                .andDo(document("UpdateInvalidCompanyName-Error",
+                        requestFields(
+                                fieldWithPath("invoiceNumber").ignored()
+                                , fieldWithPath("companyName").description("Company Name")
+                                , fieldWithPath("createDate").ignored()
+                                , fieldWithPath("modifiedDate").ignored()
+                                , fieldWithPath("items").ignored()
+                                , fieldWithPath("items[0].itemDescription").ignored()
+                                , fieldWithPath("items[0].itemCount").ignored()
+                                , fieldWithPath("items[0].itemFeeType").ignored()
+                                , fieldWithPath("items[0].itemUnitPrice").ignored()
+                                , fieldWithPath("items[0].totalItemValue").ignored()
+                                , fieldWithPath("totalInvoiceValue").ignored()
+                                , fieldWithPath("paid").ignored()
+                        ),
+                        responseFields(
+                                fieldWithPath("status").description("Status")
+                                , fieldWithPath("status_code").description("Status Code")
+                                , fieldWithPath("data").description("Invalid Company Name-Error")
+                        )));
         ;
-
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())
             .andExpect(jsonPath("length()").value(1))

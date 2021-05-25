@@ -49,7 +49,7 @@ include::{snippets}/UpdateInvoice/http-response.adoc[]
 .Response Fields
 include::{snippets}/UpdateInvoice/response-fields.adoc[]
 
-===== UpdateInvalidCompanyOnInvoice
+===== Update Invalid Company On Invoice
 
 .request
 include::{snippets}/UpdateInvalidCompanyName-Error/http-request.adoc[]
@@ -96,6 +96,14 @@ include::{snippets}/DeleteInvoiceFailedDateCheck-Error/path-parameters.adoc[]
 include::{snippets}/DeleteInvoiceFailedDateCheck-Error/http-response.adoc[]
 .Response Fields
 include::{snippets}/DeleteInvoiceFailedDateCheck-Error/response-fields.adoc[]
+
+===== Delete Invoice Failed Date and Paid Check
+.request
+include::{snippets}/DeleteInvoiceFailedDateCheckAndPaidCheck/http-request.adoc[]
+
+.response
+include::{snippets}/DeleteInvoiceFailedDateCheckAndPaidCheck/http-response.adoc[]
+.Response Fields
 
 === Companies
 
@@ -161,6 +169,20 @@ include::{snippets}/Update-Company/request-fields.adoc[]
 include::{snippets}/Update-Company/http-response.adoc[]
 .Response Fields
 include::{snippets}/Update-Company/response-fields.adoc[]
+
+===== Update Company Error - Non Existent Company
+.request
+include::{snippets}/UpdateNonExistentCompany/http-request.adoc[]
+
+.response
+include::{snippets}/UpdateNonExistentCompany/http-response.adoc[]
+
+===== Update Company Error - Duplicate Company
+.request
+include::{snippets}/DuplicateCompanyUpdate/http-request.adoc[]
+
+.response
+include::{snippets}/DuplicateCompanyUpdate/http-response.adoc[]
 
 
 ==== Get Company By Name

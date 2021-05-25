@@ -495,6 +495,11 @@ public class InvoiceIT {
             .andExpect(jsonPath("$.data.items").isNotEmpty())
             .andReturn();
 
+        mockMvc.perform(post("/invoices")
+            .content(objectMapper.writeValueAsString(invoiceDto))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
+
         Integer id = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.data.invoiceNumber");
         invoiceDto.setPaid(true);
 

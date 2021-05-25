@@ -395,7 +395,7 @@ public class InvoiceIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.data").value("Invoice is NOT an year later or Unpaid so cannot be Deleted"))
-            .andDo(document("DeleteInvoice"));
+            .andDo(document("DeleteInvoiceFailedDateCheckAndPaidCheck"));
 
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())
@@ -425,7 +425,7 @@ public class InvoiceIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.data").value("Invoice is NOT an year later or Unpaid so cannot be Deleted"))
-            .andDo(document("DeleteInvoice"));
+            .andDo(document("DeleteInvoiceFailedPaidCheck"));
 
         mockMvc.perform(get("/invoices/{id}", id))
             .andExpect(status().isOk())

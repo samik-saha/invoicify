@@ -367,7 +367,8 @@ public class CompanyIt {
                     .content(objectMapper.writeValueAsString(updatedCompanyDto)))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
             .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
-            .andExpect(jsonPath("$.data").value("Company does not exist!"));
+            .andExpect(jsonPath("$.data").value("Company does not exist!"))
+            .andDo(document("UpdateNonExistentCompany"));
 
     }
 
@@ -520,7 +521,8 @@ public class CompanyIt {
                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.getReasonPhrase()))
                 .andExpect(jsonPath("$.status_code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.data")
-                        .value("Company with this name already Exists"));
+                        .value("Company with this name already Exists"))
+                .andDo(document("DuplicateCompanyUpdate"));
 
 
     }

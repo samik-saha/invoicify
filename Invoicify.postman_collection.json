@@ -1,0 +1,675 @@
+{
+	"info": {
+		"_postman_id": "c3ca7023-57d6-46a6-a757-6b5a792a4461",
+		"name": "Invoicify",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Company1\",\r\n    \"address\": \"Address 375\",\r\n    \"contactName\": \"contact1\",\r\n    \"contactTitle\": \"title\",\r\n    \"contactPhoneNumber\": \"123-123-2345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/company",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Apple\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/company/Microsoft",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"company",
+						"Microsoft"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Company",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Company1\",\r\n    \"address\": \"Address 375\",\r\n    \"contactName\": \"contact1\",\r\n    \"contactTitle\": \"title\",\r\n    \"contactPhoneNumber\": \"123-123-2345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/company",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetInvoice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvoice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Microsoft\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"New EC2 Instance\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 100\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/invoices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvoice Copy 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Microsoft\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"New EC2 Instance\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 100\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/invoices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInvoice Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Microsoft\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"New EC2 Instance\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 100\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/invoices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Items to Invoice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"itemDescription\": \"Item1\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    },\r\n    {\r\n        \"itemDescription\": \"Item2\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    },\r\n    {\r\n        \"itemDescription\": \"Item3\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/invoices/2/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"invoices",
+						"2",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search By Invoice Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Company1\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"Item1\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 20.1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/invoices/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"invoices",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Get Company",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Add Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Company1\",\r\n    \"address\": {\r\n        \"street\": \"123 ABC Street\", \r\n        \"city\" : \"Toronto\", \r\n        \"state\": \"ON\", \r\n        \"country\": \"Canada\", \r\n        \"zipCode\": \"A1B 2D3\"},\r\n    \"contactName\": \"contact1\",\r\n    \"contactTitle\": \"title\",\r\n    \"contactPhoneNumber\": \"123-123-2345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Update Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Apple\",\r\n    \"address\": null,\r\n    \"contactName\": null,\r\n    \"contactTitle\": null,\r\n    \"contactPhoneNumber\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company/Company1",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company",
+						"Company1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Update Company ERROR",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Company2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company/Spacex",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company",
+						"Spacex"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Update Company ERROR Duplicate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Microsoft\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company/Apple",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company",
+						"Apple"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Get Company List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/company",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Get Invoices",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Get Invoices Page2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices?page=2",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Search By Invoice Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Company1\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"Item1\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 20.1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices/14",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"14"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Search By Company",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Company1\",\r\n    \"itemDtoList\": [\r\n        {\r\n            \"itemDescription\": \"Item1\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 20.1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices?company=Apple",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices"
+					],
+					"query": [
+						{
+							"key": "company",
+							"value": "Apple"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Add Invoice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"companyName\": \"Microsoft\",\r\n    \"items\": [\r\n        {\r\n            \"itemDescription\": \"Azure Instance\",\r\n            \"itemCount\": 20,\r\n            \"itemFeeType\": \"RATEBASED\",\r\n            \"itemUnitPrice\": 100\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices/",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Add Items",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"itemDescription\": \"Item1\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    },\r\n    {\r\n        \"itemDescription\": \"Item2\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    },\r\n    {\r\n        \"itemDescription\": \"Item3\",\r\n        \"itemCount\": 20,\r\n        \"itemFeeType\": \"RATEBASED\",\r\n        \"itemUnitPrice\": 20.1\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices/35/items",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"35",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Update Invoice to Paid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"paid\" : \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices/35",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"35"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "heroku Delete Invoice by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://chaos-invoicify.herokuapp.com/invoices/35",
+					"protocol": "https",
+					"host": [
+						"chaos-invoicify",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"35"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
